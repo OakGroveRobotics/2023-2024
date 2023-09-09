@@ -5,7 +5,7 @@ repositories {
 
 dependencies {
     implementation 'org.firstinspires.ftc:Inspection:8.2.0'
-//    implementation 'org.firstinspires.ftc:Blocks:8.2.0'  -- Not using Blocks
+   implementation 'org.firstinspires.ftc:Blocks:8.2.0'
 //    implementation 'org.firstinspires.ftc:Tfod:8.2.0'    -- Not using TF
     implementation 'org.firstinspires.ftc:RobotCore:8.2.0'
     implementation 'org.firstinspires.ftc:RobotServer:8.2.0'
