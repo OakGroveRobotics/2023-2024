@@ -34,6 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
@@ -49,8 +51,10 @@ public class Robert extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
+    private Servo flip = null;
+    private Servo claw = null;
 
-    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+    MecanumDrive drive = null;
     private DcMotor winchMotor = null;
     private DcMotor armMotor = null;
     @Override
@@ -64,8 +68,14 @@ public class Robert extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
+        drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+
         winchMotor = hardwareMap.get(DcMotor.class, "winchMotor");
         armMotor = hardwareMap.get(DcMotor.class,"armMotor");
+
+        flip = hardwareMap.get(Servo.class, "flip");
+        claw = hardwareMap.get(Servo.class, "claw");
+
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -115,6 +125,16 @@ public class Robert extends LinearOpMode {
 
             winchMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
             armMotor.setPower(gamepad1.right_stick_y);
+
+            if(gamepad1.left_bumper)
+                claw.setPosition(.7);
+            else if (gamepad1.right_bumper)
+                claw.setPosition(.5);
+
+            if(gamepad1.dpad_up)
+                flip.setPosition(.7);
+            if(gamepad1.dpad_down)
+                flip.setPosition(.5);
 
 
 
