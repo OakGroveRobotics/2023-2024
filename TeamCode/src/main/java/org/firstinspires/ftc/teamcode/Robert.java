@@ -50,11 +50,9 @@ public class Robert extends LinearOpMode {
     private DcMotor rightBackDrive = null;
 
 
-     //MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
     private DcMotor winchMotor = null;
     private DcMotor armMotor = null;
-//    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0 ));
-
     @Override
     public void runOpMode() {
 
@@ -103,10 +101,10 @@ public class Robert extends LinearOpMode {
             max = Math.max(max, Math.abs(rightBackPower));
 
             if (max > 1.0) {
-                leftFrontPower  /= max;
+                leftFrontPower /= max;
                 rightFrontPower /= max;
-                leftBackPower   /= max;
-                rightBackPower  /= max;
+                leftBackPower /= max;
+                rightBackPower /= max;
             }
 
             // Send calculated power to wheels
