@@ -114,10 +114,8 @@ public class Robert extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower);
 
             winchMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
-            if(gamepad1.dpad_up)
-                armMotor.setPower(1.0);
-            else if (gamepad1.dpad_down) {
-                armMotor.setPower(-1.0);
+            armMotor.setPower(gamepad1.right_stick_y);
+
             }
 
             // Show the elapsed game time and wheel power.
