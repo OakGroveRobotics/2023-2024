@@ -47,12 +47,13 @@ public class Robert extends LinearOpMode {
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
+
     private DcMotor rightBackDrive = null;
 
+
+    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
     private DcMotor winchMotor = null;
     private DcMotor armMotor = null;
-//    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0 ));
-
     @Override
     public void runOpMode() {
 
