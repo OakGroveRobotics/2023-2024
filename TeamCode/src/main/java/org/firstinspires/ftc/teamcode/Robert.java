@@ -29,7 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
-
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -49,6 +49,8 @@ public class Robert extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
+
+     //MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
     private DcMotor winchMotor = null;
     private DcMotor armMotor = null;
 //    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0 ));
@@ -116,7 +118,7 @@ public class Robert extends LinearOpMode {
             winchMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
             armMotor.setPower(gamepad1.right_stick_y);
 
-            }
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
