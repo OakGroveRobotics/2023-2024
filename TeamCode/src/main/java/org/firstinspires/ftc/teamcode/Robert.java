@@ -51,22 +51,18 @@ public class Robert extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    private Servo flip = null;
-    private Servo claw = null;
-
     MecanumDrive drive = null;
+
     private DcMotor winchMotor = null;
     private DcMotor armMotor = null;
+
+    private Servo flip = null;
+    private Servo claw = null;
     @Override
     public void runOpMode() {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
         drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
 
