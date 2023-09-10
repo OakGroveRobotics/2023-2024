@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -50,7 +51,6 @@ public class Robert extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-
     MecanumDrive drive = null;
 
     private DcMotor winchMotor = null;
@@ -65,6 +65,11 @@ public class Robert extends LinearOpMode {
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
         drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+
+        leftFrontDrive= hardwareMap.get(DcMotor.class, "left_front_motor");
+        rightFrontDrive= hardwareMap.get(DcMotor.class, "right_front_motor");
+        leftBackDrive= hardwareMap.get(DcMotor.class, "left_front_motor");
+        rightBackDrive= hardwareMap.get(DcMotor.class, "left_front_motor");
 
         winchMotor = hardwareMap.get(DcMotor.class, "winchMotor");
         armMotor = hardwareMap.get(DcMotor.class,"armMotor");
@@ -138,6 +143,7 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+
             telemetry.update();
         }
     }}
