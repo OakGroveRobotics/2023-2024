@@ -29,7 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.Pose2d;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -47,11 +47,11 @@ public class Robert extends LinearOpMode {
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
-
     private DcMotor rightBackDrive = null;
 
-
-     //MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+    private DcMotor winchMotor = null;
+    private DcMotor armMotor = null;
+//    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0 ));
 
     @Override
     public void runOpMode() {
@@ -64,6 +64,8 @@ public class Robert extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
+        winchMotor = hardwareMap.get(DcMotor.class, "winchMotor");
+        armMotor = hardwareMap.get(DcMotor.class,"armMotor");
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -110,6 +112,11 @@ public class Robert extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
+
+            winchMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+            armMotor.setPower(gamepad1.right_stick_y);
+
+            }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
