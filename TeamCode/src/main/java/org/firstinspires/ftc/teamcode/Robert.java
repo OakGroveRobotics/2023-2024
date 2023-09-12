@@ -30,6 +30,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -47,10 +49,9 @@ public class Robert extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
+
+    private LynxModule[] modules= null;
+
     MecanumDrive drive = null;
 
     private DcMotor winchMotor = null;
@@ -66,10 +67,17 @@ public class Robert extends LinearOpMode {
 
         drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
 
-        leftFrontDrive= hardwareMap.get(DcMotor.class, "left_front_motor");
-        rightFrontDrive= hardwareMap.get(DcMotor.class, "right_front_motor");
-        leftBackDrive= hardwareMap.get(DcMotor.class, "left_front_motor");
-        rightBackDrive= hardwareMap.get(DcMotor.class, "left_front_motor");
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)){
+            telemetry.addData("Device Name", module.getDeviceName());
+            telemetry.addData("Firmware Version", module.getFirmwareVersionString());
+            sleep(1000);
+        }
+
+//        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
+//        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
+//        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
+//        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+
 
         winchMotor = hardwareMap.get(DcMotor.class, "winchMotor");
         armMotor = hardwareMap.get(DcMotor.class,"armMotor");
@@ -77,10 +85,10 @@ public class Robert extends LinearOpMode {
         flip = hardwareMap.get(Servo.class, "flip");
         claw = hardwareMap.get(Servo.class, "claw");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+//        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+//        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+//        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+//        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -91,7 +99,7 @@ public class Robert extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double max;
+//            double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
@@ -100,29 +108,38 @@ public class Robert extends LinearOpMode {
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower  = axial + lateral + yaw;
-            double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower   = axial - lateral + yaw;
-            double rightBackPower  = axial + lateral - yaw;
+//            double leftFrontPower  = axial + lateral + yaw;
+//            double rightFrontPower = axial - lateral - yaw;
+//            double leftBackPower   = axial - lateral + yaw;
+//            double rightBackPower  = axial + lateral - yaw;
+//
+//            // Normalize the values so no wheel power exceeds 100%
+//            // This ensures that the robot maintains the desired motion.
+//            max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+//            max = Math.max(max, Math.abs(leftBackPower));
+//            max = Math.max(max, Math.abs(rightBackPower));
+//
+//            if (max > 1.0) {
+//                leftFrontPower /= max;
+//                rightFrontPower /= max;
+//                leftBackPower /= max;
+//                rightBackPower /= max;
+//            }
 
-            // Normalize the values so no wheel power exceeds 100%
-            // This ensures that the robot maintains the desired motion.
-            max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-            max = Math.max(max, Math.abs(leftBackPower));
-            max = Math.max(max, Math.abs(rightBackPower));
-
-            if (max > 1.0) {
-                leftFrontPower /= max;
-                rightFrontPower /= max;
-                leftBackPower /= max;
-                rightBackPower /= max;
-            }
+            drive.setDrivePowers(
+                    new PoseVelocity2d(
+                        new Vector2d(
+                                axial,
+                                lateral)
+                        , yaw
+                    )
+            );
 
             // Send calculated power to wheels
-            leftFrontDrive.setPower(leftFrontPower);
-            rightFrontDrive.setPower(rightFrontPower);
-            leftBackDrive.setPower(leftBackPower);
-            rightBackDrive.setPower(rightBackPower);
+//            leftFrontDrive.setPower(leftFrontPower);
+//            rightFrontDrive.setPower(rightFrontPower);
+//            leftBackDrive.setPower(leftBackPower);
+//            rightBackDrive.setPower(rightBackPower);
 
             winchMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
             armMotor.setPower(gamepad1.right_stick_y);
@@ -141,9 +158,8 @@ public class Robert extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-
+//            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
+//            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.update();
         }
     }}
