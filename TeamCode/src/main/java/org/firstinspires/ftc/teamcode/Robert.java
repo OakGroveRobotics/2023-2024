@@ -77,13 +77,13 @@ public class Robert extends LinearOpMode {
 //        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
 //        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
 //        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+//
 
-
-        winchMotor = hardwareMap.get(DcMotor.class, "winchMotor");
-        armMotor = hardwareMap.get(DcMotor.class,"armMotor");
-
-        flip = hardwareMap.get(Servo.class, "flip");
-        claw = hardwareMap.get(Servo.class, "claw");
+//        winchMotor = hardwareMap.get(DcMotor.class, "winchMotor");
+//        armMotor = hardwareMap.get(DcMotor.class,"armMotor");
+//
+ //       flip = hardwareMap.get(Servo.class, "flip");
+ //       claw = hardwareMap.get(Servo.class, "claw");
 
 //        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
 //        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -104,7 +104,7 @@ public class Robert extends LinearOpMode {
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
+            double yaw     = -gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -141,18 +141,18 @@ public class Robert extends LinearOpMode {
 //            leftBackDrive.setPower(leftBackPower);
 //            rightBackDrive.setPower(rightBackPower);
 
-            winchMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
-            armMotor.setPower(gamepad1.right_stick_y);
-
-            if(gamepad1.left_bumper)
-                claw.setPosition(.7);
-            else if (gamepad1.right_bumper)
-                claw.setPosition(.5);
-
-            if(gamepad1.dpad_up)
-                flip.setPosition(.7);
-            if(gamepad1.dpad_down)
-                flip.setPosition(.5);
+            //winchMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+//            armMotor.setPower(gamepad1.right_stick_y);
+//
+//            if(gamepad1.left_bumper)
+//                claw.setPosition(.7);
+//            else if (gamepad1.right_bumper)
+//                claw.setPosition(.5);
+//
+//            if(gamepad1.dpad_up)
+//                flip.setPosition(.7);
+//            if(gamepad1.dpad_down)
+//                flip.setPosition(.5);
 
 
 
