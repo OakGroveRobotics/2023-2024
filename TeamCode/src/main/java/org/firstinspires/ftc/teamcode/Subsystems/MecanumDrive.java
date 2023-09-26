@@ -56,15 +56,17 @@ public final class MecanumDrive {
         public double lateralInPerTick = 1;
         public double trackWidthTicks = 10.75;
 
-//drive constants till here are correct (I don't know what the next ones are asking)
+
 
         // feedforward parameters in tick units
+        // i dont know what this is asking
         public double kS = 0;
         public double kV = 0;
         public double kA = 0;
 
         // path profile parameters
-        public double maxWheelVel = 50;
+        //max wheel velocity is done
+        public double maxWheelVel = 61.8;
         public double minProfileAccel = -30;
         public double maxProfileAccel = 50;
 
@@ -73,6 +75,9 @@ public final class MecanumDrive {
         public double maxAngAccel = Math.PI;
 
         // path controller gains
+
+        // nothing past here is done
+
         public double axialGain = 0.0;
         public double lateralGain = 0.0;
         public double headingGain = 0.0; // shared with turn
