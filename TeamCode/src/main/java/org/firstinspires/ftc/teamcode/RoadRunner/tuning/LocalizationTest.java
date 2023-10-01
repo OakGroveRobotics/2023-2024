@@ -7,7 +7,6 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
-//import org.firstinspires.ftc.teamcode.TankDrive;
 
 public class LocalizationTest extends LinearOpMode {
     @Override
@@ -19,10 +18,10 @@ public class LocalizationTest extends LinearOpMode {
             while (opModeIsActive()) {
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(
-                                -gamepad1.left_stick_y,
-                                -gamepad1.left_stick_x
+                                gamepad1.left_stick_y,
+                                gamepad1.left_stick_x
                         ),
-                        -gamepad1.right_stick_x
+                        gamepad1.right_stick_x
                 ));
 
                 drive.updatePoseEstimate();
