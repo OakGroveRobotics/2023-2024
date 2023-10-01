@@ -51,6 +51,8 @@ import java.util.List;
 
 @Config
 public final class MecanumDrive {
+    public IMU imu;
+
     public static class Params {
         // drive model parameters
         public double inPerTick = 1;
