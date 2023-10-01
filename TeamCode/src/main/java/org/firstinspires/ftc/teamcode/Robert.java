@@ -52,11 +52,11 @@ public class Robert extends LinearOpMode {
 
     MecanumDrive drive = null;
 
-    private DcMotor winchMotor = null;
-    private DcMotor armMotor = null;
-
-    private Servo flip = null;
-    private Servo claw = null;
+//    private DcMotor winchMotor = null;
+//    private DcMotor armMotor = null;
+//
+//    private Servo flip = null;
+//    private Servo claw = null;
     @Override
     public void runOpMode() {
 
