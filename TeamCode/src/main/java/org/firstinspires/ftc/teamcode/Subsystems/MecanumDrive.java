@@ -41,6 +41,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.Localizer;
 import org.firstinspires.ftc.teamcode.RoadRunner.PoseMessage;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.RoadRunner.ThreeDeadWheelLocalizer;
 
 import java.lang.Math;
 import java.util.Arrays;
@@ -51,17 +52,21 @@ import java.util.List;
 public final class MecanumDrive {
     public static class Params {
         // drive model parameters
-        public double inPerTick = 0;
+        public double inPerTick = 1;
         public double lateralInPerTick = 1;
-        public double trackWidthTicks = 0;
+        public double trackWidthTicks = 10.75;
+
+
 
         // feedforward parameters in tick units
+        // i dont know what this is asking
         public double kS = 0;
         public double kV = 0;
         public double kA = 0;
 
         // path profile parameters
-        public double maxWheelVel = 50;
+        //max wheel velocity is done
+        public double maxWheelVel = 61.8;
         public double minProfileAccel = -30;
         public double maxProfileAccel = 50;
 
@@ -70,6 +75,9 @@ public final class MecanumDrive {
         public double maxAngAccel = Math.PI;
 
         // path controller gains
+
+        // nothing past here is done
+
         public double axialGain = 0.0;
         public double lateralGain = 0.0;
         public double headingGain = 0.0; // shared with turn
@@ -107,13 +115,13 @@ public final class MecanumDrive {
 
     private final LinkedList<Pose2d> poseHistory = new LinkedList<>();
 
-    public class DriveLocalizer implements Localizer {
+    public class freeDeadWheelLocalizer implements Localizer {
         public final Encoder leftFront, leftRear, rightRear, rightFront;
 
         private int lastLeftFrontPos, lastLeftRearPos, lastRightRearPos, lastRightFrontPos;
         private Rotation2d lastHeading;
 
-        public DriveLocalizer() {
+        public freeDeadWheelLocalizer() {
             leftFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftFront));
             leftRear = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftBack));
             rightRear = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightBack));
@@ -197,11 +205,10 @@ public final class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new DriveLocalizer();
+        localizer = new freeDeadWheelLocalizer();
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
-
     public void setDrivePowers(PoseVelocity2d powers) {
         MecanumKinematics.WheelVelocities<Time> wheelVels = new MecanumKinematics(1).inverse(
                 PoseVelocity2dDual.constant(powers, 1));
