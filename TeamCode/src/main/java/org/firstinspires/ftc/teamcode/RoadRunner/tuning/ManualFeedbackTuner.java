@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
 //import org.firstinspires.ftc.teamcode.TankDrive;
 
 public final class ManualFeedbackTuner extends LinearOpMode {
-    public static double DISTANCE = 64;
+    public static double DISTANCE = 66;
 
     @Override
     public void runOpMode() throws InterruptedException {
