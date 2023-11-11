@@ -31,9 +31,9 @@ public class LocalizationTest extends LinearOpMode {
 
                 drive.updatePoseEstimate();
 
-                TelemetryPacket packet2 = new TelemetryPacket(false);
+                TelemetryPacket packet2 = new TelemetryPacket();
                 packet2.fieldOverlay()
-                    .drawImage("/dash/ftc.jpg", drive.pose.position.x, drive.pose.position.y, 20, 20, Math.toRadians(90), 10, 10, false);
+                    .drawImage("/dash/ftc.jpg", drive.pose.position.x, drive.pose.position.y, 20, 20, Math.toRadians(90), drive.pose.position.x, drive.pose.position.y, false);
                 dashboard.sendTelemetryPacket(packet2);
 
 
