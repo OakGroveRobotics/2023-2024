@@ -366,7 +366,7 @@ public final class MecanumDrive {
                 TurnAction::new,
                 FollowTrajectoryAction::new,
                 beginPose, 1e-6, 0.0,
-                defaultTurnConstraints,
+                 defaultTurnConstraints,
                 defaultVelConstraint, defaultAccelConstraint,
                 0.25, 0.1
         );
