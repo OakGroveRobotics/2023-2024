@@ -33,7 +33,7 @@ public class LocalizationTest extends LinearOpMode {
 
                 TelemetryPacket packet2 = new TelemetryPacket();
                 packet2.fieldOverlay()
-                    .drawImage("/dash/ftc.jpg", drive.pose.position.x, drive.pose.position.y, 20, 20, drive.pose.heading.log(), drive.pose.position.x, drive.pose.position.y, false);
+                    .drawImage("/dash/ftc.jpg", drive.pose.position.x, drive.pose.position.y, 20, 20, drive.pose.heading.log(), 0, 0, false);
                 dashboard.sendTelemetryPacket(packet2);
 
 
