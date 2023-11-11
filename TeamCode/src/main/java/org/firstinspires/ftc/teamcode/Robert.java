@@ -52,11 +52,7 @@ public class Robert extends LinearOpMode {
 
     MecanumDrive drive = null;
 
-    private DcMotor winchMotor = null;
-    private DcMotor armMotor = null;
 
-    private Servo flip = null;
-    private Servo claw = null;
     @Override
     public void runOpMode() {
 
@@ -71,13 +67,7 @@ public class Robert extends LinearOpMode {
             sleep(1000);
         }
 
-//        winchMotor = hardwareMap.get(DcMotor.class, "winchMotor");
-//        armMotor = hardwareMap.get(DcMotor.class,"armMotor");
-//
-//        winchMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-//
-//        flip = hardwareMap.get(Servo.class, "flip");
-//        claw = hardwareMap.get(Servo.class, "claw");
+
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -105,23 +95,13 @@ public class Robert extends LinearOpMode {
                     )
             );
 
-//            winchMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
-//            armMotor.setPower(gamepad1.right_stick_y);
-//
-//            if(gamepad1.left_bumper)
-//                claw.setPosition(.7);
-//            else if (gamepad1.right_bumper)
-//                claw.setPosition(.5);
-//
-//            if(gamepad1.dpad_up)
-//                flip.setPosition(.7);
-//            if(gamepad1.dpad_down)
-//                flip.setPosition(.5);
 
 
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+//            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
+//            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.update();
         }
     }}
