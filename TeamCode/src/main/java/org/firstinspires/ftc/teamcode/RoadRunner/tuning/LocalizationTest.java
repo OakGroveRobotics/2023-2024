@@ -15,7 +15,6 @@ public class LocalizationTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
             MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
             FtcDashboard dashboard = FtcDashboard.getInstance();
-            TelemetryPacket packet = new TelemetryPacket();
 
             waitForStart();
 
@@ -30,13 +29,10 @@ public class LocalizationTest extends LinearOpMode {
 
                 drive.updatePoseEstimate();
 
-//                packet.fieldOverlay()
-//                        .setStrokeWidth(1)
-//                        .setStroke("goldenrod")
-//                        .strokeCircle(0, 0, ORBITAL_RADIUS)
-//                        .setFill("black")
-//                        .fillPolygon(bxPoints, byPoints);
-//                dashboard.sendTelemetryPacket(packet);
+                TelemetryPacket packet = new TelemetryPacket();
+                packet.fieldOverlay()
+                    .drawImage("/dash/ftc.jpg", drive.pose.position.x, drive.pose.position.y, 20, 20);
+                dashboard.sendTelemetryPacket(packet);
 
 
 
