@@ -16,6 +16,7 @@ public class LocalizationTest extends LinearOpMode {
             MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(72, -72, 0));
             FtcDashboard dashboard = FtcDashboard.getInstance();
             TelemetryPacket packet1 = new TelemetryPacket();
+            dashboard.sendTelemetryPacket(packet1);
 
             waitForStart();
 
