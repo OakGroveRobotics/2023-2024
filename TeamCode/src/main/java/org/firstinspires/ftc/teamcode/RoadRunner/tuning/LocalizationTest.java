@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-            MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(62, -62, 0));
+            MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
             FtcDashboard dashboard = FtcDashboard.getInstance();
             TelemetryPacket packet1 = new TelemetryPacket();
             dashboard.sendTelemetryPacket(packet1);
@@ -33,7 +33,7 @@ public class LocalizationTest extends LinearOpMode {
 
                 TelemetryPacket packet2 = new TelemetryPacket();
                 packet2.fieldOverlay()
-                    .drawImage("/dash/ftc.jpg", drive.pose.position.x, drive.pose.position.y, 20, 20, drive.pose.heading.log(), 0, 0, false);
+                    .drawImage("/dash/ftc.jpg", drive.pose.position.y, drive.pose.position.x, 20, 20, drive.pose.heading.log(), 10, 10, false);
                 dashboard.sendTelemetryPacket(packet2);
 
 
