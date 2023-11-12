@@ -17,12 +17,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 @Config
 public final class ThreeDeadWheelLocalizer implements Localizer {
     public static class Params {
-        //inPerTick = 0.0005496745;
-        //Pods are X inches away
-        //inPerTick * POS_DIR_TICKS = X - > X / inPerTick = POS_DIR_TICKS
-        public double PAR0_Y_TICKS = .000122;
-        public double PAR1_Y_TICKS = -.000122;
-        public double PERP_X_TICKS = .000122;
+        //these are done
+        public double PAR0_Y_TICKS = 9787.4287419191;
+        public double PAR1_Y_TICKS = -9787.4287419191;
+        public double PERP_X_TICKS = -8414.0705090012;
     }
 
     public static Params PARAMS = new Params();
