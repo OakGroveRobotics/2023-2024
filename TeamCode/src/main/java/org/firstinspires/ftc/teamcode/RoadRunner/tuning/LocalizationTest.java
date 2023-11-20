@@ -7,7 +7,6 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.dashboard.FtcDashboard;
-
 import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
 
 public class LocalizationTest extends LinearOpMode {
@@ -20,6 +19,7 @@ public class LocalizationTest extends LinearOpMode {
 
             waitForStart();
 
+            
             while (opModeIsActive()) {
                 drive.setDrivePowers(new PoseVelocity2d(
                         new Vector2d(
@@ -43,6 +43,8 @@ public class LocalizationTest extends LinearOpMode {
                 telemetry.addData("y", drive.pose.position.y);
                 telemetry.addData("heading", drive.pose.heading);
                 telemetry.update();
+
+
             }
     }
 }

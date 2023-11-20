@@ -54,6 +54,10 @@ import java.util.List;
 public final class MecanumDrive {
     public IMU imu;
 
+    public com.acmerobotics.roadrunner.ftc.Actions moveToPoint(int i, int i1) {
+
+    }
+
     public static class Params {
         // drive model parameters
         public double inPerTick = 0.0005347752;
