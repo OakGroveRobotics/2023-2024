@@ -36,6 +36,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -51,11 +52,12 @@ public class Robert extends LinearOpMode {
     private LynxModule[] modules= null;
 
     MecanumDrive drive = null;
+    private DcMotor armExtend = null;
 
 
     @Override
     public void runOpMode() {
-
+        armExtend = hardwareMap.get(DcMotor.class, "armExtend");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
@@ -66,7 +68,6 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Firmware Version", module.getFirmwareVersionString());
             sleep(1000);
         }
-
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -84,6 +85,7 @@ public class Robert extends LinearOpMode {
             double lateral =  gamepad1.left_stick_x;
             double yaw     = gamepad1.right_stick_x;
 
+            armExtend.setPower(gamepad1.right_stick_y);
 
 
             drive.setDrivePowers(
