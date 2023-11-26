@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -23,14 +24,14 @@ public class armExtensionTest extends LinearOpMode {
 private DcMotor armExtend = null;
     @Override
     public void runOpMode() {
-        armExtend = hardwareMap.get(DcMotor.class, "armExtend");
-        armExtend.setDirection(DcMotor.Direction.FORWARD);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        FtcDashboard dashboard = FtcDashboard.getInstance();
 
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-             armExtend.setPower(-gamepad1.left_stick_y / 2 );
+
 
 
 

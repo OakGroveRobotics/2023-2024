@@ -54,17 +54,19 @@ import java.util.List;
 public final class MecanumDrive {
     public IMU imu;
 
+    public com.acmerobotics.roadrunner.ftc.Actions moveToPoint(int i, int i1) {
+        return null;
+    }
+
     public static class Params {
         // drive model parameters
         public double inPerTick = 0.0005347752;
         public double lateralInPerTick = 1;
         public double trackWidthTicks = 10.75;
 
-
-
         // feedforward parameters in tick units
         public double kS = 0.9309710139287306;
-        public double kV =  0.00009970390553938805;
+        public double kV =  -0.00009970390553938805;
         public double kA = 0;
 
         // path profile parameters
