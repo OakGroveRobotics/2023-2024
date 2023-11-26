@@ -25,7 +25,7 @@ public class autoTest<Drive> extends LinearOpMode {
                 dashboard.sendTelemetryPacket(packet2);
 
         while (opModeIsActive()) {
-            drive.moveToPoint(5, 0).runBlocking();
+//            drive.moveToPoint(5, 0).runBlocking();
         }
 
     }
