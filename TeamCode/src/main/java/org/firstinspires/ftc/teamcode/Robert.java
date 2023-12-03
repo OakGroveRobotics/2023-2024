@@ -52,12 +52,12 @@ public class Robert extends LinearOpMode {
     private LynxModule[] modules= null;
 
     MecanumDrive drive = null;
-    private DcMotor armExtend = null;
+    private DcMotor armExtend1 = null;
 
 
     @Override
     public void runOpMode() {
-        armExtend = hardwareMap.get(DcMotor.class, "armExtend");
+        armExtend1 = hardwareMap.get(DcMotor.class, "armExtend1");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
@@ -68,7 +68,9 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Firmware Version", module.getFirmwareVersionString());
             sleep(1000);
         }
-
+        DcMotor armMotor1 = hardwareMap.dcMotor.get("armExtend1");
+        armMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
+        armMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn the motor back on when we are done
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -85,7 +87,10 @@ public class Robert extends LinearOpMode {
             double lateral =  gamepad1.left_stick_x;
             double yaw     = gamepad1.right_stick_x;
 
-            armExtend.setPower(gamepad1.right_stick_y);
+            int extendPosition1 = armMotor1.getCurrentPosition();
+
+            armExtend1.setPower(gamepad1.right_trigger);
+            armExtend1.setPower(-gamepad1.left_trigger);
 
 
             drive.setDrivePowers(
@@ -99,7 +104,7 @@ public class Robert extends LinearOpMode {
 
 
 
-
+            telemetry.addData("Extend Position", extendPosition1);
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
 //            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
