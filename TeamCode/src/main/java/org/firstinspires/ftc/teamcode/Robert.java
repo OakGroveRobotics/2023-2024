@@ -81,6 +81,10 @@ public class Robert extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            if(gamepad1.y){
+                armMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                armMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = gamepad1.left_stick_y;
@@ -88,10 +92,19 @@ public class Robert extends LinearOpMode {
             double yaw     = gamepad1.right_stick_x;
 
             int extendPosition1 = armMotor1.getCurrentPosition();
+            if(gamepad1.b){
+                extendPosition1 = 2000;
+            }
 
-            armExtend1.setPower(gamepad1.right_trigger);
-            armExtend1.setPower(-gamepad1.left_trigger);
+            if(gamepad1.right_trigger > 0 && extendPosition1 <= 2150){
+                armExtend1.setPower(gamepad1.right_trigger);
+            }
+            else if(gamepad1.left_trigger > 0 && extendPosition1 >= 150){
+                armExtend1.setPower(-gamepad1.left_trigger);
+            }
+            else{armExtend1.setPower(0);
 
+            }
 
             drive.setDrivePowers(
                     new PoseVelocity2d(
