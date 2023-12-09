@@ -39,6 +39,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
 
@@ -55,6 +57,8 @@ public class Robert extends LinearOpMode {
     private DcMotor armExtend1 = null;
     private DcMotor armExtend2 = null;
     private DcMotor armRaise = null;
+    private Servo pixelLatch = null;
+    private Servo flipServo = null;
 
 
     @Override
@@ -62,6 +66,8 @@ public class Robert extends LinearOpMode {
         armExtend1 = hardwareMap.get(DcMotor.class, "armExtend1");
         armExtend2 = hardwareMap.get(DcMotor.class, "armExtend2");
         armRaise = hardwareMap.get(DcMotor.class, "armRaise");
+        pixelLatch = hardwareMap.get(Servo.class, "pixelLatch");
+        flipServo = hardwareMap.get(Servo.class, "flipServo");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
@@ -108,6 +114,7 @@ public class Robert extends LinearOpMode {
             int extendPosition2 = armExtend2.getCurrentPosition();
             extendPosition2 = -extendPosition2;
             int raisePosition = armRaise.getCurrentPosition();
+            double contPower;
             if(gamepad1.b){
                 extendPosition1 = 2000;
                 extendPosition2 = 2000;
@@ -131,14 +138,26 @@ public class Robert extends LinearOpMode {
             else{
                 armExtend2.setPower(0);
             }
-            if(gamepad1.right_stick_y > 0 && raisePosition < 300){
-                armRaise.setPower(gamepad1.right_stick_y);
+            if(-gamepad1.right_stick_y > 0 && raisePosition < 1300){
+                armRaise.setPower(-gamepad1.right_stick_y);
             }
-            else if(gamepad1.right_stick_y < 0 && raisePosition > 0){
-                armRaise.setPower(gamepad1.right_stick_y);
+            else if(-gamepad1.right_stick_y < 0 && raisePosition > 0){
+                armRaise.setPower(-gamepad1.right_stick_y);
             }
             else{
                 armRaise.setPower(0);
+            }
+            if(gamepad1.right_bumper){
+                pixelLatch.setPosition(1);
+            }
+            else if(gamepad1.left_bumper){
+                pixelLatch.setPosition(0.2);
+            }
+            if(gamepad1.dpad_right){
+                flipServo.setPosition(flipServo.getPosition() + .1);
+            }
+            else if(gamepad1.dpad_left){
+                flipServo.setPosition(flipServo.getPosition() + .1);
             }
             drive.setDrivePowers(
                     new PoseVelocity2d(
@@ -154,6 +173,7 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Extend Position 1", extendPosition1);
             telemetry.addData("Extend Position 2", extendPosition2);
             telemetry.addData("Arm Raise Position", raisePosition);
+            telemetry.addData("Pixel Latch Position", pixelLatch.getPosition());
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
 //            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
