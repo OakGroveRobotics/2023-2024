@@ -59,6 +59,8 @@ public class Robert extends LinearOpMode {
     private DcMotor armRaise = null;
     private Servo pixelLatch = null;
     private Servo flipServo = null;
+    private DcMotor intake = null;
+
 
 
     @Override
@@ -68,6 +70,7 @@ public class Robert extends LinearOpMode {
         armRaise = hardwareMap.get(DcMotor.class, "armRaise");
         pixelLatch = hardwareMap.get(Servo.class, "pixelLatch");
         flipServo = hardwareMap.get(Servo.class, "flipServo");
+        intake = hardwareMap.get(DcMotor.class, "intake");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
@@ -151,13 +154,19 @@ public class Robert extends LinearOpMode {
                 pixelLatch.setPosition(1);
             }
             else if(gamepad1.left_bumper){
-                pixelLatch.setPosition(0.2);
+                pixelLatch.setPosition(0.12);
             }
             if(gamepad1.dpad_right){
                 flipServo.setPosition(flipServo.getPosition() + .1);
             }
             else if(gamepad1.dpad_left){
                 flipServo.setPosition(flipServo.getPosition() + .1);
+            }
+            if(gamepad1.a){
+                intake.setPower(1);
+            }
+            else if(gamepad1.x){
+                intake.setPower(0);
             }
             drive.setDrivePowers(
                     new PoseVelocity2d(
