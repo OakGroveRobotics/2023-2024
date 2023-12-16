@@ -189,6 +189,9 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Extend Position 2", extendPosition2);
             telemetry.addData("Arm Raise Position", raisePosition);
             telemetry.addData("Pixel Latch Position", pixelLatch.getPosition());
+            telemetry.addData("Par0", drive.rightFront.getCurrentPosition());
+            telemetry.addData("Par1", drive.leftBack.getCurrentPosition());
+            telemetry.addData("perp", drive.leftFront.getCurrentPosition());
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
 //            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
