@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Size;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
@@ -28,6 +30,8 @@ public class VisionTesting extends LinearOpMode {
                 .build();
         VisionPortal myVisionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .setCameraResolution(new Size(480, 480))
+                .enableLiveView(true)
                 .addProcessors(aprilTag)
                 .build();
 
@@ -53,6 +57,9 @@ public class VisionTesting extends LinearOpMode {
             telemetry.addData("y", drive.pose.position.y);
             telemetry.addData("heading", drive.pose.heading);
             telemetry.update();
+
+
+
         }
     }
 }
