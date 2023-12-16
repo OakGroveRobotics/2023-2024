@@ -36,6 +36,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -67,9 +68,15 @@ public class Robert extends LinearOpMode {
     public void runOpMode() {
         armExtend1 = hardwareMap.get(DcMotor.class, "armExtend1");
         armExtend2 = hardwareMap.get(DcMotor.class, "armExtend2");
+
+        armExtend2.setDirection(DcMotorSimple.Direction.REVERSE);
+
         armRaise = hardwareMap.get(DcMotor.class, "armRaise");
+
         pixelLatch = hardwareMap.get(Servo.class, "pixelLatch");
+
         flipServo = hardwareMap.get(Servo.class, "flipServo");
+
         intake = hardwareMap.get(DcMotor.class, "intake");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
@@ -81,13 +88,6 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Firmware Version", module.getFirmwareVersionString());
             sleep(1000);
         }
-        DcMotor armExtend1 = hardwareMap.dcMotor.get("armExtend1");
-        armExtend1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
-        armExtend1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn the motor back on when we are done
-
-        DcMotor armExtend2 = hardwareMap.dcMotor.get("armExtend2");
-        armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         DcMotor armRaise = hardwareMap.dcMotor.get("armRaise");
         armRaise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -99,8 +99,29 @@ public class Robert extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        if(opModeIsActive()){
+            armExtend1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            armExtend1.setTargetPosition(150);
+            armExtend2.setTargetPosition(150);
+
+            armExtend1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            armExtend2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            armExtend1.setPower(.2);
+            armExtend2.setPower(.2);
+
+            armExtend1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            armExtend1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            int extendPosition1 = armExtend1.getCurrentPosition();
             if(gamepad1.y){
                 armExtend1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 armExtend1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -113,7 +134,6 @@ public class Robert extends LinearOpMode {
             double lateral =  gamepad1.left_stick_x;
             double yaw     = gamepad1.right_stick_x;
 
-            int extendPosition1 = armExtend1.getCurrentPosition();
             int extendPosition2 = armExtend2.getCurrentPosition();
             extendPosition2 = -extendPosition2;
             int raisePosition = armRaise.getCurrentPosition();
@@ -123,28 +143,22 @@ public class Robert extends LinearOpMode {
                 extendPosition2 = 2000;
             }
 
-            if(gamepad1.right_trigger > 0 && extendPosition1 < 2150){
-                armExtend1.setPower(gamepad1.right_trigger);
-            }
-            else if(gamepad1.left_trigger > 0 && extendPosition1 > 150){
+            if( armExtend1.getCurrentPosition() > 2150){
                 armExtend1.setPower(-gamepad1.left_trigger);
+                armExtend2.setPower(-gamepad1.left_trigger);
+            }
+            else if(armExtend1.getCurrentPosition() < 0){
+                armExtend1.setPower(gamepad1.right_trigger);
+                armExtend2.setPower(gamepad1.right_trigger);
             }
             else{
-                armExtend1.setPower(0);
+                armExtend1.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
+                armExtend2.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
             }
-            if(gamepad1.right_trigger > 0 && extendPosition2 < 2150){
-                armExtend2.setPower(-gamepad1.right_trigger);
-            }
-            else if(gamepad1.left_trigger > 0 && extendPosition2 > 150){
-                armExtend2.setPower(gamepad1.left_trigger);
-            }
-            else{
-                armExtend2.setPower(0);
-            }
-            if(-gamepad1.right_stick_y > 0 && raisePosition < 1300){
+            if(armRaise.getCurrentPosition() < 1300){
                 armRaise.setPower(-gamepad1.right_stick_y);
             }
-            else if(-gamepad1.right_stick_y < 0 && raisePosition > 0){
+            else if(armRaise.getCurrentPosition() > 0){
                 armRaise.setPower(-gamepad1.right_stick_y);
             }
             else{

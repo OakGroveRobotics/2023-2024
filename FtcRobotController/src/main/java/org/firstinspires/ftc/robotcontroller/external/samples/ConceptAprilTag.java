@@ -179,7 +179,7 @@ public class ConceptAprilTag extends LinearOpMode {
         // Build the Vision Portal, using the above settings.
         visionPortal = builder.build();
 
-        // Disable or re-enable the aprilTag processor at any time.
+        // Disable or re-enable the april Tag processor at any time.
         //visionPortal.setProcessorEnabled(aprilTag, true);
 
     }   // end method initAprilTag()
