@@ -141,7 +141,7 @@ public class Robert extends LinearOpMode {
             else{
                 armExtend2.setPower(0);
             }
-            if(-gamepad1.right_stick_y > 0 && raisePosition < 1300){
+            if(-gamepad1.right_stick_y > 0 && raisePosition < 1400){
                 armRaise.setPower(-gamepad1.right_stick_y);
             }
             else if(-gamepad1.right_stick_y < 0 && raisePosition > 0){
@@ -154,16 +154,22 @@ public class Robert extends LinearOpMode {
                 pixelLatch.setPosition(1);
             }
             else if(gamepad1.left_bumper){
-                pixelLatch.setPosition(0.12);
+                pixelLatch.setPosition(0);
             }
-            if(gamepad1.dpad_right){
-                flipServo.setPosition(flipServo.getPosition() + .1);
+            if(gamepad1.dpad_up){
+                flipServo.setPosition(.4);
+            }
+            else if(gamepad1.dpad_right){
+                flipServo.setPosition(.3);
+            }
+            else if(gamepad1.dpad_down){
+                flipServo.setPosition(.2);
             }
             else if(gamepad1.dpad_left){
-                flipServo.setPosition(flipServo.getPosition() + .1);
+                flipServo.setPosition(.12);
             }
             if(gamepad1.a){
-                intake.setPower(1);
+                intake.setPower(-1);
             }
             else if(gamepad1.x){
                 intake.setPower(0);
