@@ -49,7 +49,7 @@ public class VisionTesting extends LinearOpMode {
                 .build();
         VisionPortal myVisionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .setCameraResolution(new Size(600, 480))
+                .setCameraResolution(new Size(800, 600))
                 .enableLiveView(true)
                 .addProcessors(aprilTag)
                 .build();
@@ -60,15 +60,9 @@ public class VisionTesting extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            try {
-                if (detections.size() == 0) {
-                    detections = aprilTag.getDetections();
-                    TagOfInterest = detections.get(0);
-                }
-            }
-            catch(Exception e){}
+            TagOfInterest = aprilTag.getDetections().get(0);
 
-            if(TagOfInterest != null){
+            if(TagOfInterest.metadata != null){
                 drive.setDrivePowers(
                         new PoseVelocity2d(
                             new Vector2d(
@@ -79,15 +73,6 @@ public class VisionTesting extends LinearOpMode {
 
             }
 
-
-//            drive.setDrivePowers(new PoseVelocity2d(
-//                    new Vector2d(
-//                            gamepad1.left_stick_y,
-//                            gamepad1.left_stick_x
-//                    ),
-//                    gamepad1.right_stick_x
-//            ));
-
             drive.updatePoseEstimate();
 
             TelemetryPacket packet2 = new TelemetryPacket();
@@ -96,6 +81,14 @@ public class VisionTesting extends LinearOpMode {
             dashboard.sendTelemetryPacket(packet2);
 
             aprilTag.getDetections();
+
+            if(TagOfInterest.metadata != null){
+                telemetry.addData("TagOfInterest ID", TagOfInterest.id);
+                telemetry.addData("TagOfInterest X offset", TagOfInterest.ftcPose.x);
+                telemetry.addData("TagOfInterest Y offset", TagOfInterest.ftcPose.y);
+                telemetry.addData("TagOfInterest yaw", TagOfInterest.ftcPose.yaw);
+
+            }
 
             telemetry.addData("x", drive.pose.position.x);
             telemetry.addData("y", drive.pose.position.y);
