@@ -75,8 +75,8 @@ public class VisionTesting extends LinearOpMode {
                 drive.setDrivePowers(
                         new PoseVelocity2d(
                                 new Vector2d(
-                                        TagOfInterest.ftcPose.y,
-                                        TagOfInterest.ftcPose.x)
+                                        (-TagOfInterest.ftcPose.y * .2),
+                                        (-TagOfInterest.ftcPose.x* .2),
                                 , TagOfInterest.ftcPose.yaw
                         ));
 
