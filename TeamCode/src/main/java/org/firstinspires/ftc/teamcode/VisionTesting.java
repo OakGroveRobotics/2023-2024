@@ -61,42 +61,40 @@ public class VisionTesting extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if(TagOfInterest.metadata == null) {
-                TagOfInterest = detections.get(0);
-            }
+            TagOfInterest = detections.get(0);
 
-            if(TagOfInterest.metadata != null){
+            while(TagOfInterest.metadata != null) {
                 drive.setDrivePowers(
                         new PoseVelocity2d(
-                            new Vector2d(
-                                TagOfInterest.ftcPose.y,
-                                TagOfInterest.ftcPose.x)
-                        , TagOfInterest.ftcPose.yaw
-                ));
+                                new Vector2d(
+                                        TagOfInterest.ftcPose.y,
+                                        TagOfInterest.ftcPose.x)
+                                , TagOfInterest.ftcPose.yaw
+                        ));
 
+
+                drive.updatePoseEstimate();
+
+                TelemetryPacket packet2 = new TelemetryPacket();
+                packet2.fieldOverlay()
+                        .drawImage("/dash/ftc.jpg", (drive.pose.position.x), (drive.pose.position.y), 13, 13.25, drive.pose.heading.log(), 6.5, 6.625, false);
+                dashboard.sendTelemetryPacket(packet2);
+
+                aprilTag.getDetections();
+
+                if (TagOfInterest.metadata != null) {
+                    telemetry.addData("TagOfInterest ID", TagOfInterest.id);
+                    telemetry.addData("TagOfInterest X offset", TagOfInterest.ftcPose.x);
+                    telemetry.addData("TagOfInterest Y offset", TagOfInterest.ftcPose.y);
+                    telemetry.addData("TagOfInterest yaw", TagOfInterest.ftcPose.yaw);
+
+                }
+
+                telemetry.addData("x", drive.pose.position.x);
+                telemetry.addData("y", drive.pose.position.y);
+                telemetry.addData("heading", drive.pose.heading);
+                telemetry.update();
             }
-
-            drive.updatePoseEstimate();
-
-            TelemetryPacket packet2 = new TelemetryPacket();
-            packet2.fieldOverlay()
-                    .drawImage("/dash/ftc.jpg", (drive.pose.position.x), (drive.pose.position.y), 13, 13.25, drive.pose.heading.log(), 6.5, 6.625, false);
-            dashboard.sendTelemetryPacket(packet2);
-
-            aprilTag.getDetections();
-
-            if(TagOfInterest.metadata != null){
-                telemetry.addData("TagOfInterest ID", TagOfInterest.id);
-                telemetry.addData("TagOfInterest X offset", TagOfInterest.ftcPose.x);
-                telemetry.addData("TagOfInterest Y offset", TagOfInterest.ftcPose.y);
-                telemetry.addData("TagOfInterest yaw", TagOfInterest.ftcPose.yaw);
-
-            }
-
-            telemetry.addData("x", drive.pose.position.x);
-            telemetry.addData("y", drive.pose.position.y);
-            telemetry.addData("heading", drive.pose.heading);
-            telemetry.update();
 
 
 
