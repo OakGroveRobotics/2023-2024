@@ -49,7 +49,7 @@ public class VisionTesting extends LinearOpMode {
                 .build();
         VisionPortal myVisionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .setCameraResolution(new Size(600, 480))
+                .setCameraResolution(new Size(800, 600))
                 .enableLiveView(true)
                 .addProcessors(aprilTag)
                 .build();

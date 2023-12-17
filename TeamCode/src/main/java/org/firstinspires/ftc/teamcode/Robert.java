@@ -36,8 +36,8 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -61,6 +61,8 @@ public class Robert extends LinearOpMode {
     private Servo pixelLatch = null;
     private Servo flipServo = null;
     private DcMotor intake = null;
+    private CRServo tape1 = null;
+    private CRServo tape2 = null;
 
 
 
@@ -68,16 +70,13 @@ public class Robert extends LinearOpMode {
     public void runOpMode() {
         armExtend1 = hardwareMap.get(DcMotor.class, "armExtend1");
         armExtend2 = hardwareMap.get(DcMotor.class, "armExtend2");
-
         armExtend2.setDirection(DcMotorSimple.Direction.REVERSE);
-
         armRaise = hardwareMap.get(DcMotor.class, "armRaise");
-
         pixelLatch = hardwareMap.get(Servo.class, "pixelLatch");
-
         flipServo = hardwareMap.get(Servo.class, "flipServo");
-
         intake = hardwareMap.get(DcMotor.class, "intake");
+        tape1 = hardwareMap.get(CRServo.class, "tape1");
+        tape2 = hardwareMap.get(CRServo.class, "tape2");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
@@ -88,10 +87,17 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Firmware Version", module.getFirmwareVersionString());
             sleep(1000);
         }
+        DcMotor armExtend1 = hardwareMap.dcMotor.get("armExtend1");
+        armExtend1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
+        armExtend1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn the motor back on when we are done
 
         DcMotor armRaise = hardwareMap.dcMotor.get("armRaise");
         armRaise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armRaise.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        DcMotor armExtend2 = hardwareMap.dcMotor.get("armExtend2");
+        armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -191,6 +197,18 @@ public class Robert extends LinearOpMode {
                     )
             );
 
+//            winchMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+//            armMotor.setPower(gamepad1.right_stick_y);
+//
+//            if(gamepad1.left_bumper)
+//                claw.setPosition(.7);
+//            else if (gamepad1.right_bumper)
+//                claw.setPosition(.5);
+//
+//            if(gamepad1.dpad_up)
+//                flip.setPosition(.7);
+//            if(gamepad1.dpad_down)
+//                flip.setPosition(.5);
 
 
             telemetry.addData("Extend Position 1", extendPosition1);
@@ -202,8 +220,6 @@ public class Robert extends LinearOpMode {
             telemetry.addData("perp", drive.leftFront.getCurrentPosition());
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-//            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
-//            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.update();
         }
     }}
