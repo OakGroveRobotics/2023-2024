@@ -56,6 +56,7 @@ public class VisionTesting extends LinearOpMode {
 
 
         ArrayList<AprilTagDetection> detections = null;
+        TagOfInterest = aprilTag.getDetections().get(0);
         waitForStart();
 
         while (opModeIsActive()) {
