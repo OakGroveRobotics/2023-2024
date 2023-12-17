@@ -60,7 +60,9 @@ public class VisionTesting extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            TagOfInterest = aprilTag.getDetections().get(0);
+            if(TagOfInterest.metadata == null) {
+                TagOfInterest = aprilTag.getDetections().get(0);
+            }
 
             if(TagOfInterest.metadata != null){
                 drive.setDrivePowers(
