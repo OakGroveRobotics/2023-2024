@@ -66,10 +66,12 @@ public class VisionTesting extends LinearOpMode {
             for(AprilTagDetection detection :detections){
                 if(detection.metadata != null){
                     TagOfInterest = detection;
+                    break;
                 }
             }
 
-            if(TagOfInterest.metadata != null) {
+
+            if (TagOfInterest != null) {
                 drive.setDrivePowers(
                         new PoseVelocity2d(
                                 new Vector2d(
@@ -101,7 +103,6 @@ public class VisionTesting extends LinearOpMode {
                 telemetry.addData("heading", drive.pose.heading);
                 telemetry.update();
             }
-
 
 
         }
