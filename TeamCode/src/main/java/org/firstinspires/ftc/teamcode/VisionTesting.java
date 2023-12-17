@@ -69,6 +69,13 @@ public class VisionTesting extends LinearOpMode {
             catch(Exception e){}
 
             if(TagOfInterest != null){
+                drive.setDrivePowers(
+                        new PoseVelocity2d(
+                            new Vector2d(
+                                TagOfInterest.ftcPose.y,
+                                TagOfInterest.ftcPose.x)
+                        , TagOfInterest.ftcPose.yaw
+                ));
 
             }
 
@@ -93,8 +100,6 @@ public class VisionTesting extends LinearOpMode {
             telemetry.addData("x", drive.pose.position.x);
             telemetry.addData("y", drive.pose.position.y);
             telemetry.addData("heading", drive.pose.heading);
-            telemetry.addData("Tag IDs", aprilTag.getDetections());
-            telemetry.addData("New Tag IDs", aprilTag.getFreshDetections());
             telemetry.update();
 
 
