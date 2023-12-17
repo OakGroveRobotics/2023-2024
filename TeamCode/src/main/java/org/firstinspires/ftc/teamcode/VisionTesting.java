@@ -69,7 +69,7 @@ public class VisionTesting extends LinearOpMode {
                 }
             }
 
-            while(TagOfInterest.metadata != null) {
+            if(TagOfInterest.metadata != null) {
                 drive.setDrivePowers(
                         new PoseVelocity2d(
                                 new Vector2d(
