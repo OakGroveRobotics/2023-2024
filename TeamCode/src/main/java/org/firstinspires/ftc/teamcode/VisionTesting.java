@@ -63,8 +63,10 @@ public class VisionTesting extends LinearOpMode {
 
             detections = aprilTag.getDetections();
 
-            if(detections.get(0).metadata != null){
-                TagOfInterest = detections.get(0);
+            for(AprilTagDetection detection :detections){
+                if(detection.metadata != null){
+                    TagOfInterest = detection;
+                }
             }
 
             while(TagOfInterest.metadata != null) {
