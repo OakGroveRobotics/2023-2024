@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import android.util.Size;
 
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 @Config
 @Autonomous
+@Disabled
 public class VisionTesting extends LinearOpMode {
 
 
@@ -108,3 +109,5 @@ public class VisionTesting extends LinearOpMode {
         }
     }
 }
+
+ */
