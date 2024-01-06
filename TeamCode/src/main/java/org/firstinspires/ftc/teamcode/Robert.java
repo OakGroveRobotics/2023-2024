@@ -58,11 +58,15 @@ public class Robert extends LinearOpMode {
     private DcMotor armExtend1 = null;
     private DcMotor armExtend2 = null;
     private DcMotor armRaise = null;
-    private Servo pixelLatch = null;
-    private Servo flipServo = null;
-    private DcMotor intake = null;
+    private CRServo intake = null;
     private CRServo hoist1 = null;
     private CRServo hoist2 = null;
+    private Servo pixelLatch = null;
+    private Servo planeSwitch = null;
+    private Servo clawFlip = null;
+    private Servo clawTilt = null;
+    private double flipPosition = 0;
+    private double tiltPosition = 0;
 
 
 
@@ -73,11 +77,13 @@ public class Robert extends LinearOpMode {
         armExtend2 = hardwareMap.get(DcMotor.class, "armExtend2");
         armExtend2.setDirection(DcMotorSimple.Direction.REVERSE);
         armRaise = hardwareMap.get(DcMotor.class, "armRaise");
-        pixelLatch = hardwareMap.get(Servo.class, "pixelLatch");
-        flipServo = hardwareMap.get(Servo.class, "flipServo");
-        intake = hardwareMap.get(DcMotor.class, "intake");
+        intake = hardwareMap.get(CRServo.class, "intake");
         hoist1 = hardwareMap.get(CRServo.class, "hoist1");
         hoist2 = hardwareMap.get(CRServo.class, "hoist2");
+        pixelLatch = hardwareMap.get(Servo.class, "pixelLatch");
+        planeSwitch = hardwareMap.get(Servo.class, "planeSwitch");
+        clawFlip = hardwareMap.get(Servo.class, "clawFlip");
+        clawTilt = hardwareMap.get(Servo.class, "clawTilt");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
@@ -99,7 +105,7 @@ public class Robert extends LinearOpMode {
         armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hoist2.setDirection(CRServo.Direction.REVERSE);
-
+        planeSwitch.setPosition(.21);
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -110,10 +116,7 @@ public class Robert extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             if(gamepad1.y){
-                armExtend1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                armExtend1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
             }
 
 
@@ -126,15 +129,40 @@ public class Robert extends LinearOpMode {
             int extendPosition2 = armExtend2.getCurrentPosition();
             extendPosition2 = -extendPosition2;
             int raisePosition = armRaise.getCurrentPosition();
-            double contPower;
 
             hoist1.setPower(gamepad2.left_stick_y);
             hoist2.setPower(gamepad2.right_stick_y);
-            if(intake.getPower() == 1 && gamepad1.a){
-                intake.setPower(0);
+            if(gamepad1.dpad_right){
+                flipPosition += .1;
             }
-            else if(intake.getPower() == 0 && gamepad1.a){
+            else if(gamepad1.dpad_left){
+                flipPosition -= .1;
+            }
+            clawFlip.setPosition(flipPosition);
+            if(gamepad1.dpad_up){
+                tiltPosition += .1;
+            }
+            else if(gamepad1.dpad_down){
+                tiltPosition -= .1;
+            }
+            clawTilt.setPosition(tiltPosition);
+            if(gamepad1.y){
+                planeSwitch.setPosition(.54);
+            }
+            if(gamepad1.x){
+                pixelLatch.setPosition(0);
+            }
+            else if(gamepad1.a){
+                pixelLatch.setPosition(.255);
+            }
+            else if(gamepad1.b){
+                pixelLatch.setPosition(.42);
+            }
+            if(gamepad1.right_bumper){
                 intake.setPower(1);
+            }
+            else if(gamepad1.left_bumper){
+                intake.setPower(0);
             }
             if(gamepad1.right_trigger > 0 && extendPosition1 < 2150){
                 armExtend1.setPower(gamepad1.right_trigger);
@@ -163,12 +191,7 @@ public class Robert extends LinearOpMode {
             else{
                 armRaise.setPower(0);
             }
-            if(gamepad1.right_bumper){
-                pixelLatch.setPosition(1);
-            }
-            else if(gamepad1.left_bumper){
-                pixelLatch.setPosition(0);
-            }
+
             drive.setDrivePowers(
                     new PoseVelocity2d(
                         new Vector2d(
@@ -183,7 +206,6 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Extend Position 1", extendPosition1);
             telemetry.addData("Extend Position 2", extendPosition2);
             telemetry.addData("Arm Raise Position", raisePosition);
-            telemetry.addData("Pixel Latch Position", pixelLatch.getPosition());
             telemetry.addData("Par0", drive.rightFront.getCurrentPosition());
             telemetry.addData("Par1", drive.leftBack.getCurrentPosition());
             telemetry.addData("perp", drive.leftFront.getCurrentPosition());
