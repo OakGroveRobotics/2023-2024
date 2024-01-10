@@ -65,7 +65,7 @@ public class Robert extends LinearOpMode {
     private Servo planeSwitch = null;
     private Servo clawFlip = null;
     private Servo clawTilt = null;
-    private double flipPosition = 0;
+    private double flipPosition = 1;
     private double tiltPosition = 0;
 
 
@@ -75,7 +75,7 @@ public class Robert extends LinearOpMode {
     public void runOpMode() {
         armExtend1 = hardwareMap.get(DcMotor.class, "armExtend1");
         armExtend2 = hardwareMap.get(DcMotor.class, "armExtend2");
-        armExtend2.setDirection(DcMotorSimple.Direction.REVERSE);
+        armExtend2.setDirection(DcMotorSimple.Direction.FORWARD);
         armRaise = hardwareMap.get(DcMotor.class, "armRaise");
         intake = hardwareMap.get(CRServo.class, "intake");
         hoist1 = hardwareMap.get(CRServo.class, "hoist1");
@@ -97,7 +97,6 @@ public class Robert extends LinearOpMode {
         DcMotor armExtend1 = hardwareMap.dcMotor.get("armExtend1");
         armExtend1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
         armExtend1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn the motor back on when we are done
-
         DcMotor armRaise = hardwareMap.dcMotor.get("armRaise");
         armRaise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armRaise.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -106,6 +105,7 @@ public class Robert extends LinearOpMode {
         armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hoist2.setDirection(CRServo.Direction.REVERSE);
         planeSwitch.setPosition(.21);
+
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -132,20 +132,31 @@ public class Robert extends LinearOpMode {
 
             hoist1.setPower(gamepad2.left_stick_y);
             hoist2.setPower(gamepad2.right_stick_y);
+            if(gamepad1.left_stick_button){
+                flipPosition = .45;
+                clawFlip.setPosition(flipPosition);
+                tiltPosition = .83;
+                sleep(1000);
+                clawTilt.setPosition(tiltPosition);
+            }
+            if(gamepad1.right_stick_button){
+                flipPosition = .16;
+                tiltPosition = .933;
+            }
             if(gamepad1.dpad_right){
-                flipPosition += .1;
+                flipPosition += .002;
             }
             else if(gamepad1.dpad_left){
-                flipPosition -= .1;
+                flipPosition -= .002;
             }
-            clawFlip.setPosition(flipPosition);
+
             if(gamepad1.dpad_up){
-                tiltPosition += .1;
+                tiltPosition += .003;
             }
             else if(gamepad1.dpad_down){
-                tiltPosition -= .1;
+                tiltPosition -= .003;
             }
-            clawTilt.setPosition(tiltPosition);
+
             if(gamepad1.y){
                 planeSwitch.setPosition(.54);
             }
@@ -191,7 +202,8 @@ public class Robert extends LinearOpMode {
             else{
                 armRaise.setPower(0);
             }
-
+            clawFlip.setPosition(flipPosition);
+            clawTilt.setPosition(tiltPosition);
             drive.setDrivePowers(
                     new PoseVelocity2d(
                         new Vector2d(
@@ -209,6 +221,8 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Par0", drive.rightFront.getCurrentPosition());
             telemetry.addData("Par1", drive.leftBack.getCurrentPosition());
             telemetry.addData("perp", drive.leftFront.getCurrentPosition());
+            telemetry.addData("flipPosition", clawFlip.getPosition());
+            telemetry.addData("tiltPosition", clawTilt.getPosition());
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
