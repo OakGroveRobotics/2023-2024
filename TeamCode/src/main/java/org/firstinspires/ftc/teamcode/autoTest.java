@@ -29,9 +29,14 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -65,6 +70,26 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class autoTest extends LinearOpMode {
 
+    private Servo clawFlip = hardwareMap.get(Servo.class, "clawFlip");
+    private Servo clawTilt = hardwareMap.get(Servo.class, "clawTilt");
+    private Servo pixelLatch = hardwareMap.get(Servo.class, "pixelLatch");
+
+    public Action dropPixel(){
+        return new Action(){
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                packet.put("drive X pos", drive.pose.position.x);
+                packet.put("drive Y pos", drive.pose.position.y);
+                clawFlip.setPosition(.45); //adjust
+                sleep(1000); //time between actions
+                clawTilt.setPosition(.83);//adjust
+                sleep(1000); //time between actions
+                pixelLatch.setPosition(.42); //adjust
+                return true;
+            }
+        };
+    }
+
   MecanumDrive drive = null;
   double axial = 0;
   double lateral = 0;
@@ -74,17 +99,21 @@ public class autoTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        double spikeMarkX = 24;
+        double parkingMarkX = 24;
+        double parkingMarky = 24;
+
+
         drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
         waitForStart();
         while (opModeIsActive()) {
-            axial = .5;
-            sleep(1000);
-            axial = 0;
-
-
-
-
-
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .splineTo(new Vector2d(spikeMarkX, 0), 0)
+                            .afterDisp(spikeMarkX, dropPixel())
+                            .splineTo(new Vector2d(parkingMarkX, parkingMarky), 0)
+                            .build());
 
             telemetry.update();
         }

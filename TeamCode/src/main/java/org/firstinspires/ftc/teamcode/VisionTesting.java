@@ -1,4 +1,4 @@
-/*package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 import android.util.Size;
 
@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
+import org.firstinspires.ftc.teamcode.piplines.ColorPosition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
@@ -48,6 +49,9 @@ public class VisionTesting extends LinearOpMode {
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
                 .build();
+
+//        ColorPosition colorPosition = new ColorPosition(775.79f, 775.79f,400.898f, 300.79f);
+
         VisionPortal myVisionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(800, 600))
@@ -55,16 +59,17 @@ public class VisionTesting extends LinearOpMode {
                 .addProcessors(aprilTag)
                 .build();
 
+        TelemetryPacket packet2 = new TelemetryPacket();
 
         ArrayList<AprilTagDetection> detections = null;
-        detections = aprilTag.getDetections();
+
         waitForStart();
 
         while (opModeIsActive()) {
 
             detections = aprilTag.getDetections();
 
-            for(AprilTagDetection detection :detections){
+            for(AprilTagDetection detection : detections){
                 if(detection.metadata != null){
                     TagOfInterest = detection;
                     break;
@@ -73,41 +78,39 @@ public class VisionTesting extends LinearOpMode {
 
 
             if (TagOfInterest != null) {
-                drive.setDrivePowers(
-                        new PoseVelocity2d(
-                                new Vector2d(
-                                        (-TagOfInterest.ftcPose.y * .2),
-                                        (-TagOfInterest.ftcPose.x* .2),
-                                , TagOfInterest.ftcPose.yaw
-                        ));
+//                drive.setDrivePowers(
+//                        new PoseVelocity2d(
+//                                new Vector2d(
+//                                        (-TagOfInterest.ftcPose.y * .2),
+//                                        (-TagOfInterest.ftcPose.x* .2))
+//                                , TagOfInterest.ftcPose.yaw
+//                        ));
+
 
 
                 drive.updatePoseEstimate();
 
-                TelemetryPacket packet2 = new TelemetryPacket();
                 packet2.fieldOverlay()
                         .drawImage("/dash/ftc.jpg", (drive.pose.position.x), (drive.pose.position.y), 13, 13.25, drive.pose.heading.log(), 6.5, 6.625, false);
                 dashboard.sendTelemetryPacket(packet2);
-
-                aprilTag.getDetections();
 
                 if (TagOfInterest.metadata != null) {
                     telemetry.addData("TagOfInterest ID", TagOfInterest.id);
                     telemetry.addData("TagOfInterest X offset", TagOfInterest.ftcPose.x);
                     telemetry.addData("TagOfInterest Y offset", TagOfInterest.ftcPose.y);
                     telemetry.addData("TagOfInterest yaw", TagOfInterest.ftcPose.yaw);
+                    telemetry.addData("x", drive.pose.position.x);
+                    telemetry.addData("y", drive.pose.position.y);
+                    telemetry.addData("heading", drive.pose.heading);
+                    telemetry.update();
 
                 }
-
-                telemetry.addData("x", drive.pose.position.x);
-                telemetry.addData("y", drive.pose.position.y);
-                telemetry.addData("heading", drive.pose.heading);
-                telemetry.update();
             }
+
+
 
 
         }
     }
 }
 
- */
