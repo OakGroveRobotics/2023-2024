@@ -104,7 +104,7 @@ public class Robert extends LinearOpMode {
         armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hoist2.setDirection(CRServo.Direction.REVERSE);
-        planeSwitch.setPosition(.21);
+        planeSwitch.setPosition(.5);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -122,7 +122,7 @@ public class Robert extends LinearOpMode {
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = gamepad1.left_stick_y;
-            double lateral =  gamepad1.left_stick_x;
+            double lateral = gamepad1.left_stick_x;
             double yaw     = gamepad1.right_stick_x;
 
             int extendPosition1 = armExtend1.getCurrentPosition();
@@ -130,35 +130,44 @@ public class Robert extends LinearOpMode {
             extendPosition2 = -extendPosition2;
             int raisePosition = armRaise.getCurrentPosition();
 
+            if(gamepad1.dpad_right){
+                flipPosition += .009;
+                clawFlip.setPosition(flipPosition);
+            }
+            else if(gamepad1.dpad_left){
+                flipPosition -= .009;
+                clawFlip.setPosition(flipPosition);
+            }
+            if(gamepad1.dpad_up){
+                tiltPosition += .003;
+                clawTilt.setPosition(tiltPosition);
+            }
+            else if(gamepad1.dpad_down) {
+                tiltPosition -= .003;
+                clawTilt.setPosition(tiltPosition);
+            }
             hoist1.setPower(gamepad2.left_stick_y);
             hoist2.setPower(gamepad2.right_stick_y);
             if(gamepad1.left_stick_button){
-                flipPosition = .45;
-                clawFlip.setPosition(flipPosition);
-                tiltPosition = .83;
-                sleep(1000);
-                clawTilt.setPosition(tiltPosition);
+                tiltPosition = .9;
+                clawTilt.setPosition(.9);
+                sleep(500);
+                flipPosition = .2;
+                clawFlip.setPosition(.2);
             }
             if(gamepad1.right_stick_button){
-                flipPosition = .16;
-                tiltPosition = .933;
-            }
-            if(gamepad1.dpad_right){
-                flipPosition += .002;
-            }
-            else if(gamepad1.dpad_left){
-                flipPosition -= .002;
+                pixelLatch.setPosition(.5);
+                tiltPosition = .905;
+                clawTilt.setPosition(.905);
+                sleep(500);
+                flipPosition = .14;
+                clawFlip.setPosition(.14);
             }
 
-            if(gamepad1.dpad_up){
-                tiltPosition += .003;
-            }
-            else if(gamepad1.dpad_down){
-                tiltPosition -= .003;
-            }
 
-            if(gamepad1.y){
-                planeSwitch.setPosition(.54);
+
+            if(gamepad2.y){
+                planeSwitch.setPosition(0.1);
             }
             if(gamepad1.x){
                 pixelLatch.setPosition(0);
@@ -167,7 +176,7 @@ public class Robert extends LinearOpMode {
                 pixelLatch.setPosition(.255);
             }
             else if(gamepad1.b){
-                pixelLatch.setPosition(.42);
+                pixelLatch.setPosition(.5);
             }
             if(gamepad1.right_bumper){
                 intake.setPower(1);
