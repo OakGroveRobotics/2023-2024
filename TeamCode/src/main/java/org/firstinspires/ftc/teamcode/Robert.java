@@ -68,8 +68,8 @@ public class Robert extends LinearOpMode {
     private Servo claw1 = null;
     private Servo claw2 = null;
     private boolean planeToggle = true;
-    private boolean claw1Toggle = false;
-    private boolean claw2Toggle = false;
+    private boolean claw1Toggle = true;
+    private boolean claw2Toggle = true;
     private Gamepad currentGamepad1 = new Gamepad();
     private Gamepad currentGamepad2 = new Gamepad();
     private Gamepad previousGamepad1 = new Gamepad();
@@ -133,10 +133,10 @@ public class Robert extends LinearOpMode {
             if(currentGamepad2.y && !previousGamepad2.y) {
                 planeToggle = !planeToggle;
             }
-            if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
+            if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
                 claw1Toggle = !claw1Toggle;
             }
-            if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
+            if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
                 claw2Toggle = !claw2Toggle;
             }
             if(currentGamepad1.dpad_left && !previousGamepad1.dpad_left){
@@ -179,16 +179,16 @@ public class Robert extends LinearOpMode {
                 planeSwitch.setPosition(.1);
             }
             if(claw1Toggle){
-                claw1.setPosition(0);
+                claw1.setPosition(0.4);
             }
             else{
                 claw1.setPosition(1);
             }
             if(claw2Toggle){
-                claw2.setPosition(0);
+                claw2.setPosition(0.8);
             }
             else{
-                claw2.setPosition(1);
+                claw2.setPosition(0);
             }
             if(gamepad1.right_trigger > 0 && extendPosition1 < 2150){
                 armExtend1.setPower(gamepad1.right_trigger);
