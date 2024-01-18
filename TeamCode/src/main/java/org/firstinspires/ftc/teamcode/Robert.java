@@ -36,6 +36,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -58,16 +59,22 @@ public class Robert extends LinearOpMode {
     private DcMotor armExtend1 = null;
     private DcMotor armExtend2 = null;
     private DcMotor armRaise = null;
-    private CRServo intake = null;
     private CRServo hoist1 = null;
     private CRServo hoist2 = null;
-    private Servo pixelLatch = null;
     private Servo planeSwitch = null;
-    private Servo clawFlip = null;
+    private Servo clawFlip1 = null;
+    private Servo clawFlip2 = null;
     private Servo clawTilt = null;
-    private double flipPosition = 1;
-    private double tiltPosition = 0;
-
+    private Servo claw1 = null;
+    private Servo claw2 = null;
+    private boolean planeToggle = true;
+    private boolean claw1Toggle = true;
+    private boolean claw2Toggle = true;
+    private Gamepad currentGamepad1 = new Gamepad();
+    private Gamepad currentGamepad2 = new Gamepad();
+    private Gamepad previousGamepad1 = new Gamepad();
+    private Gamepad previousGamepad2 = new Gamepad();
+    private Boolean alreadyRumble = false;
 
 
 
@@ -77,13 +84,14 @@ public class Robert extends LinearOpMode {
         armExtend2 = hardwareMap.get(DcMotor.class, "armExtend2");
         armExtend2.setDirection(DcMotorSimple.Direction.FORWARD);
         armRaise = hardwareMap.get(DcMotor.class, "armRaise");
-        intake = hardwareMap.get(CRServo.class, "intake");
         hoist1 = hardwareMap.get(CRServo.class, "hoist1");
         hoist2 = hardwareMap.get(CRServo.class, "hoist2");
-        pixelLatch = hardwareMap.get(Servo.class, "pixelLatch");
         planeSwitch = hardwareMap.get(Servo.class, "planeSwitch");
-        clawFlip = hardwareMap.get(Servo.class, "clawFlip");
+        clawFlip1 = hardwareMap.get(Servo.class, "clawFlip1");
+        clawFlip2 = hardwareMap.get(Servo.class, "clawFlip2");
         clawTilt = hardwareMap.get(Servo.class, "clawTilt");
+        claw1 = hardwareMap.get(Servo.class, "claw1");
+        claw2 = hardwareMap.get(Servo.class, "claw2");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
@@ -104,7 +112,10 @@ public class Robert extends LinearOpMode {
         armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hoist2.setDirection(CRServo.Direction.REVERSE);
-        planeSwitch.setPosition(.21);
+        planeSwitch.setPosition(.5);
+        clawFlip1.setPosition(0);
+        clawFlip2.setPosition(1);
+        clawTilt.setPosition(0);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -115,65 +126,69 @@ public class Robert extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            if(gamepad1.y){
-
+            previousGamepad1.copy(currentGamepad1);
+            previousGamepad2.copy(currentGamepad2);
+            currentGamepad1.copy(gamepad1);
+            currentGamepad2.copy(gamepad2);
+            if(currentGamepad2.y && !previousGamepad2.y) {
+                planeToggle = !planeToggle;
             }
-
-
+            if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
+                claw1Toggle = !claw1Toggle;
+            }
+            if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
+                claw2Toggle = !claw2Toggle;
+            }
+            if(currentGamepad1.dpad_left && !previousGamepad1.dpad_left){
+                clawFlip1.setPosition(clawFlip1.getPosition() + 0.1);
+                clawFlip2.setPosition(clawFlip2.getPosition() - 0.1);
+            }
+            if(currentGamepad1.dpad_right && !previousGamepad1.dpad_right){
+                clawFlip1.setPosition(clawFlip1.getPosition() - 0.1);
+                clawFlip2.setPosition(clawFlip2.getPosition() + 0.1);
+            }
+            if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up){
+                clawTilt.setPosition(clawTilt.getPosition() + 0.1);
+            }
+            if(currentGamepad1.dpad_down && !previousGamepad1.dpad_down){
+                clawTilt.setPosition(clawTilt.getPosition() - 0.1);
+            }
+            hoist1.setPower(gamepad2.left_stick_y);
+            hoist2.setPower(gamepad2.right_stick_y);
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = gamepad1.left_stick_y;
-            double lateral =  gamepad1.left_stick_x;
+            double lateral = gamepad1.left_stick_x;
             double yaw     = gamepad1.right_stick_x;
-
+            if(runtime.time() > 3 && !alreadyRumble){
+                gamepad1.rumble(2000);
+                gamepad2.rumble(2000);
+                alreadyRumble = true;
+            }
+            if(gamepad2.a){
+                gamepad1.rumble(1000);
+            }
             int extendPosition1 = armExtend1.getCurrentPosition();
             int extendPosition2 = armExtend2.getCurrentPosition();
             extendPosition2 = -extendPosition2;
             int raisePosition = armRaise.getCurrentPosition();
 
-            hoist1.setPower(gamepad2.left_stick_y);
-            hoist2.setPower(gamepad2.right_stick_y);
-            if(gamepad1.left_stick_button){
-                flipPosition = .45;
-                clawFlip.setPosition(flipPosition);
-                tiltPosition = .83;
-                sleep(1000);
-                clawTilt.setPosition(tiltPosition);
+            if(planeToggle){
+                planeSwitch.setPosition(.5);
             }
-            if(gamepad1.right_stick_button){
-                flipPosition = .16;
-                tiltPosition = .933;
+            else{
+                planeSwitch.setPosition(.1);
             }
-            if(gamepad1.dpad_right){
-                flipPosition += .002;
+            if(claw1Toggle){
+                claw1.setPosition(0.4);
             }
-            else if(gamepad1.dpad_left){
-                flipPosition -= .002;
+            else{
+                claw1.setPosition(1);
             }
-
-            if(gamepad1.dpad_up){
-                tiltPosition += .003;
+            if(claw2Toggle){
+                claw2.setPosition(0.8);
             }
-            else if(gamepad1.dpad_down){
-                tiltPosition -= .003;
-            }
-
-            if(gamepad1.y){
-                planeSwitch.setPosition(.54);
-            }
-            if(gamepad1.x){
-                pixelLatch.setPosition(0);
-            }
-            else if(gamepad1.a){
-                pixelLatch.setPosition(.255);
-            }
-            else if(gamepad1.b){
-                pixelLatch.setPosition(.42);
-            }
-            if(gamepad1.right_bumper){
-                intake.setPower(1);
-            }
-            else if(gamepad1.left_bumper){
-                intake.setPower(0);
+            else{
+                claw2.setPosition(0);
             }
             if(gamepad1.right_trigger > 0 && extendPosition1 < 2150){
                 armExtend1.setPower(gamepad1.right_trigger);
@@ -202,8 +217,6 @@ public class Robert extends LinearOpMode {
             else{
                 armRaise.setPower(0);
             }
-            clawFlip.setPosition(flipPosition);
-            clawTilt.setPosition(tiltPosition);
             drive.setDrivePowers(
                     new PoseVelocity2d(
                         new Vector2d(
@@ -221,8 +234,6 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Par0", drive.rightFront.getCurrentPosition());
             telemetry.addData("Par1", drive.leftBack.getCurrentPosition());
             telemetry.addData("perp", drive.leftFront.getCurrentPosition());
-            telemetry.addData("flipPosition", clawFlip.getPosition());
-            telemetry.addData("tiltPosition", clawTilt.getPosition());
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();

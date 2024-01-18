@@ -70,9 +70,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class autoTest extends LinearOpMode {
 
-    private Servo clawFlip = hardwareMap.get(Servo.class, "clawFlip");
-    private Servo clawTilt = hardwareMap.get(Servo.class, "clawTilt");
-    private Servo pixelLatch = hardwareMap.get(Servo.class, "pixelLatch");
+    private Servo clawFlip = null;
+    private Servo clawTilt = null;
+    private Servo pixelLatch =  null;
+
+    MecanumDrive drive = null;
 
     public Action dropPixel(){
         return new Action(){
@@ -90,7 +92,6 @@ public class autoTest extends LinearOpMode {
         };
     }
 
-  MecanumDrive drive = null;
   double axial = 0;
   double lateral = 0;
   double yaw = 0;
@@ -99,13 +100,15 @@ public class autoTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+         drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+          clawFlip = hardwareMap.get(Servo.class, "clawFlip");
+          clawTilt = hardwareMap.get(Servo.class, "clawTilt");
+          pixelLatch = hardwareMap.get(Servo.class, "pixelLatch");
 
-        double spikeMarkX = 24;
+        double spikeMarkX = - 24;
         double parkingMarkX = 24;
         double parkingMarky = 24;
 
-
-        drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
         waitForStart();
         while (opModeIsActive()) {
             Actions.runBlocking(
@@ -115,7 +118,6 @@ public class autoTest extends LinearOpMode {
                             .splineTo(new Vector2d(parkingMarkX, parkingMarky), 0)
                             .build());
 
-            telemetry.update();
         }
     }
 }
