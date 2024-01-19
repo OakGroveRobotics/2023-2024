@@ -29,9 +29,7 @@ import com.acmerobotics.roadrunner.ftc.LynxFirmware;
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.PositionVelocityPair;
 import com.acmerobotics.roadrunner.ftc.RawEncoder;
-import com.qualcomm.hardware.lynx.LynxEmbeddedBNO055IMUNew;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -61,7 +59,7 @@ public final class MecanumDrive {
     public static class Params {
         // drive model parameters
         public double inPerTick = 0.0005347752;
-        public double lateralInPerTick =  -0.00039120696508401873;
+        public double lateralInPerTick =  -0.00039120696508401873; //TODO Make this positive
         public double trackWidthTicks = 20101.904501181;
 
         // feedforward parameters in tick units
@@ -70,9 +68,9 @@ public final class MecanumDrive {
         public double kA = 0;
 
         // path profile parameters
-        public double maxWheelVel = 50;
+        public double maxWheelVel = 30;
         public double minProfileAccel = -30;
-        public double maxProfileAccel = 50;
+        public double maxProfileAccel = 30;
 
         // turn profile parameters
         public double maxAngVel = Math.PI; // shared with path
@@ -115,7 +113,6 @@ public final class MecanumDrive {
     private final LinkedList<Pose2d> poseHistory = new LinkedList<>();
 
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
-        imu = hardwareMap.get(IMU.class, "imu");
         this.pose = pose;
 
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);

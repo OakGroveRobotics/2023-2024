@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Twist2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -17,18 +16,17 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
-import org.firstinspires.ftc.teamcode.piplines.ColorPosition;
+import org.firstinspires.ftc.teamcode.piplines.ColorProcessorImpl;
+import org.firstinspires.ftc.teamcode.piplines.Interfaces.ColorProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
-import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 
 @Config
 @Autonomous
-@Disabled
 public class VisionTesting extends LinearOpMode {
 
 
@@ -50,6 +48,8 @@ public class VisionTesting extends LinearOpMode {
                 .setDrawTagOutline(true)
                 .build();
 
+        ColorProcessor itemFinder = new ColorProcessorImpl.Builder()
+                .build();
 //        ColorPosition colorPosition = new ColorPosition(775.79f, 775.79f,400.898f, 300.79f);
 
         VisionPortal myVisionPortal = new VisionPortal.Builder()
@@ -78,14 +78,13 @@ public class VisionTesting extends LinearOpMode {
 
 
             if (TagOfInterest != null) {
-//                drive.setDrivePowers(
-//                        new PoseVelocity2d(
-//                                new Vector2d(
-//                                        (-TagOfInterest.ftcPose.y * .2),
-//                                        (-TagOfInterest.ftcPose.x* .2))
-//                                , TagOfInterest.ftcPose.yaw
-//                        ));
-
+                drive.setDrivePowers(
+                        new PoseVelocity2d(
+                                new Vector2d(
+                                        (-TagOfInterest.ftcPose.y * .2),
+                                        (-TagOfInterest.ftcPose.x* .2))
+                                , TagOfInterest.ftcPose.yaw
+                        ));
 
 
                 drive.updatePoseEstimate();

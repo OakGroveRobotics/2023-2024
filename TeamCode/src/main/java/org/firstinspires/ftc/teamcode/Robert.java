@@ -126,12 +126,12 @@ public class Robert extends LinearOpMode {
             double yaw     = gamepad1.right_stick_x;
 
             int extendPosition1 = armExtend1.getCurrentPosition();
-            int extendPosition2 = armExtend2.getCurrentPosition();
-            extendPosition2 = -extendPosition2;
+            int extendPosition2 = -(armExtend2.getCurrentPosition());
             int raisePosition = armRaise.getCurrentPosition();
 
             hoist1.setPower(gamepad2.left_stick_y);
             hoist2.setPower(gamepad2.right_stick_y);
+
             if(gamepad1.left_stick_button){
                 flipPosition = .45;
                 clawFlip.setPosition(flipPosition);
@@ -204,6 +204,7 @@ public class Robert extends LinearOpMode {
             }
             clawFlip.setPosition(flipPosition);
             clawTilt.setPosition(tiltPosition);
+
             drive.setDrivePowers(
                     new PoseVelocity2d(
                         new Vector2d(
