@@ -68,8 +68,8 @@ public class Robert extends LinearOpMode {
     private Servo claw1 = null;
     private Servo claw2 = null;
     private boolean planeToggle = true;
-    private boolean claw1Toggle = true;
-    private boolean claw2Toggle = true;
+    private boolean claw1Toggle = false;
+    private boolean claw2Toggle = false;
     private Gamepad currentGamepad1 = new Gamepad();
     private Gamepad currentGamepad2 = new Gamepad();
     private Gamepad previousGamepad1 = new Gamepad();
@@ -113,9 +113,9 @@ public class Robert extends LinearOpMode {
         armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hoist2.setDirection(CRServo.Direction.REVERSE);
         planeSwitch.setPosition(.5);
-        clawFlip1.setPosition(0);
-        clawFlip2.setPosition(1);
-        clawTilt.setPosition(0);
+        clawFlip1.setPosition(0.1);
+        clawFlip2.setPosition(0.9);
+        clawTilt.setPosition(0.3);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -130,28 +130,50 @@ public class Robert extends LinearOpMode {
             previousGamepad2.copy(currentGamepad2);
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
+            if(gamepad1.x){
+                clawFlip1.setPosition(.95);
+                clawFlip2.setPosition(.0494);
+                clawTilt.setPosition(.7);
+                claw1Toggle = !claw1Toggle;
+                claw2Toggle = !claw2Toggle;
+            }
+            if(gamepad1.a){
+                clawFlip1.setPosition(.775);
+                clawFlip2.setPosition(.2244);
+                clawTilt.setPosition(.7994);
+            }
+            if(gamepad1.b){
+                clawFlip1.setPosition(.70);
+                clawFlip2.setPosition(.2994);
+                clawTilt.setPosition(.7494);
+            }
+            if(gamepad1.y){
+                clawFlip1.setPosition(.6494);
+                clawFlip2.setPosition(.3494);
+                clawTilt.setPosition(.6494);
+            }
             if(currentGamepad2.y && !previousGamepad2.y) {
                 planeToggle = !planeToggle;
             }
-            if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
+            if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
                 claw1Toggle = !claw1Toggle;
             }
-            if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
+            if(currentGamepad1.right_bumper && !previousGamepad1.right_bumper){
                 claw2Toggle = !claw2Toggle;
             }
             if(currentGamepad1.dpad_left && !previousGamepad1.dpad_left){
-                clawFlip1.setPosition(clawFlip1.getPosition() + 0.1);
-                clawFlip2.setPosition(clawFlip2.getPosition() - 0.1);
+                clawFlip1.setPosition(clawFlip1.getPosition() + 0.05);
+                clawFlip2.setPosition(clawFlip2.getPosition() - 0.05);
             }
             if(currentGamepad1.dpad_right && !previousGamepad1.dpad_right){
-                clawFlip1.setPosition(clawFlip1.getPosition() - 0.1);
-                clawFlip2.setPosition(clawFlip2.getPosition() + 0.1);
+                clawFlip1.setPosition(clawFlip1.getPosition() - 0.05);
+                clawFlip2.setPosition(clawFlip2.getPosition() + 0.05);
             }
             if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up){
-                clawTilt.setPosition(clawTilt.getPosition() + 0.1);
+                clawTilt.setPosition(clawTilt.getPosition() + 0.05);
             }
             if(currentGamepad1.dpad_down && !previousGamepad1.dpad_down){
-                clawTilt.setPosition(clawTilt.getPosition() - 0.1);
+                clawTilt.setPosition(clawTilt.getPosition() - 0.05);
             }
             hoist1.setPower(gamepad2.left_stick_y);
             hoist2.setPower(gamepad2.right_stick_y);
@@ -234,6 +256,9 @@ public class Robert extends LinearOpMode {
             telemetry.addData("Par0", drive.rightFront.getCurrentPosition());
             telemetry.addData("Par1", drive.leftBack.getCurrentPosition());
             telemetry.addData("perp", drive.leftFront.getCurrentPosition());
+            telemetry.addData("flip position1", clawFlip1.getPosition());
+            telemetry.addData("flip position 2", clawFlip2.getPosition());
+            telemetry.addData("tilt position", clawTilt.getPosition());
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
