@@ -2,19 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Size;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Twist2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -23,14 +18,13 @@ import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
-import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 
 @Config
-@TeleOp(name="RoadRunnerTest", group="Linear Opmode")
-public class RoadRunnerTest extends LinearOpMode {
+@Autonomous(name="autoPark", group="Linear Opmode")
+public class autoPark extends LinearOpMode {
 
 
     @Override
@@ -65,17 +59,13 @@ public class RoadRunnerTest extends LinearOpMode {
         ArrayList<AprilTagDetection> detections = null;
 
         waitForStart();
+        telemetry.addData("here",drive.pose.position.x);
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                        .lineToX(48)
+                        .build());
 
         while (opModeIsActive()) {
-
-            if(gamepad1.a) {
-                telemetry.addData("here",drive.pose.position.x);
-                Actions.runBlocking(
-                        drive.actionBuilder(drive.pose)
-                                .lineToX(48)
-                                .build());
-            }
-
 
                 drive.updatePoseEstimate();
 

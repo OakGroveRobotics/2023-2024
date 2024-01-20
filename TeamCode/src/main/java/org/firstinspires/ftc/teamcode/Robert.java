@@ -134,20 +134,23 @@ public class Robert extends LinearOpMode {
                 clawFlip1.setPosition(.95);
                 clawFlip2.setPosition(.0494);
                 clawTilt.setPosition(.7);
-                claw1Toggle = !claw1Toggle;
-                claw2Toggle = !claw2Toggle;
             }
             if(gamepad1.a){
-                clawFlip1.setPosition(.775);
-                clawFlip2.setPosition(.2244);
-                clawTilt.setPosition(.7994);
+                clawFlip1.setPosition(.875);
+                clawFlip2.setPosition(.123);
+                clawTilt.setPosition(.7478);
             }
             if(gamepad1.b){
+                clawFlip1.setPosition(.75);
+                clawFlip2.setPosition(.2488);
+                clawTilt.setPosition(.7488);
+            }
+            if(gamepad1.y){
                 clawFlip1.setPosition(.70);
                 clawFlip2.setPosition(.2994);
                 clawTilt.setPosition(.7494);
             }
-            if(gamepad1.y){
+            if(gamepad1.right_stick_button){
                 clawFlip1.setPosition(.6494);
                 clawFlip2.setPosition(.3494);
                 clawTilt.setPosition(.6494);
