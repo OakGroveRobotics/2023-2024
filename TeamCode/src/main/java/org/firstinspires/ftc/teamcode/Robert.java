@@ -133,7 +133,7 @@ public class Robert extends LinearOpMode {
             if(gamepad1.x){
                 clawFlip1.setPosition(.95);
                 clawFlip2.setPosition(.0494);
-                clawTilt.setPosition(.7);
+                clawTilt.setPosition(.65);
             }
             if(gamepad1.a){
                 clawFlip1.setPosition(.875);
@@ -184,7 +184,7 @@ public class Robert extends LinearOpMode {
             double axial   = gamepad1.left_stick_y;
             double lateral = gamepad1.left_stick_x;
             double yaw     = gamepad1.right_stick_x;
-            if(runtime.time() > 3 && !alreadyRumble){
+            if(runtime.time() > 120 && !alreadyRumble){
                 gamepad1.rumble(2000);
                 gamepad2.rumble(2000);
                 alreadyRumble = true;

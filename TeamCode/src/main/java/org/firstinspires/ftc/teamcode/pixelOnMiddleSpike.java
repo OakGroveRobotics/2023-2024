@@ -9,7 +9,6 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -24,13 +23,14 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.ArrayList;
 
 @Config
-@Autonomous(name="autoPixelDrop", group="Linear Opmode")
-public class autoPixelDrop extends LinearOpMode {
+@Autonomous(name="Pixel on middle spike", group="Linear Opmode")
+public class pixelOnMiddleSpike extends LinearOpMode {
     private Servo clawFlip1 = null;
     private Servo clawFlip2 = null;
     private Servo clawTilt = null;
     private Servo claw1 = null;
     private Servo claw2 = null;
+
 
     @Override
     public void runOpMode() {
@@ -41,11 +41,11 @@ public class autoPixelDrop extends LinearOpMode {
         clawTilt = hardwareMap.get(Servo.class, "clawTilt");
         claw1 = hardwareMap.get(Servo.class, "claw1");
         claw2 = hardwareMap.get(Servo.class, "claw2");
+        clawFlip1.setPosition(.875);
+        clawFlip2.setPosition(.123);
+        clawTilt.setPosition(.65);
         claw1.setPosition(1);
         claw2.setPosition(0);
-        clawFlip1.setPosition(0.1);
-        clawFlip2.setPosition(0.9);
-        clawTilt.setPosition(0.3);
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -74,23 +74,30 @@ public class autoPixelDrop extends LinearOpMode {
         ArrayList<AprilTagDetection> detections = null;
 
         waitForStart();
-        telemetry.addData("here",drive.pose.position.x);
-        clawFlip1.setPosition(.875);
-        clawFlip2.setPosition(.123);
-        clawTilt.setPosition(.7478);
-        sleep(500);
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .lineToX(-19)
-                        .build());
-        sleep(500);
-        claw1.setPosition(0.4);
-        sleep(500);
-        clawFlip1.setPosition(0.1);
-        clawFlip2.setPosition(0.9);
-        clawTilt.setPosition(0.3);
 
         while (opModeIsActive()) {
+
+            if(gamepad1.a) {
+                telemetry.addData("here",drive.pose.position.x);
+                Actions.runBlocking(
+                        drive.actionBuilder(drive.pose)
+                                        .lineToX(-20)
+                                                .build());
+                claw1.setPosition(.4);
+                sleep(1000);
+                clawFlip1.setPosition(.75);
+                clawFlip2.setPosition(.2488);
+                clawTilt.setPosition(.7);
+                Actions.runBlocking(
+                        drive.actionBuilder(drive.pose)
+                                .lineToX(-30)
+                                .turn(Math.toRadians(90))
+                                .lineToY(-34.5)
+                                .build());
+                claw2.setPosition(.8);
+            }
+
+
                 drive.updatePoseEstimate();
 
                 packet2.fieldOverlay()
