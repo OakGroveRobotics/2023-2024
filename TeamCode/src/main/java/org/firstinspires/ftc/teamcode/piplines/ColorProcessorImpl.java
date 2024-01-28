@@ -139,8 +139,6 @@ public class ColorProcessorImpl extends ColorProcessor {
         return selection;
      }
 
-
-
     void constructMatrix()
     {
         //     Construct the camera matrix.

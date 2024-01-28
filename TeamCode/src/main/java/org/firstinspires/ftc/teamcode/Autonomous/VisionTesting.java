@@ -8,7 +8,9 @@ import android.util.Size;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -75,6 +77,45 @@ public class VisionTesting extends OpMode {
 
     public void start() {
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+        while(itemFinder.getSelected() == ColorProcessorImpl.Selected.NONE){}
+
+        if((itemFinder.getSelected() == ColorProcessorImpl.Selected.LEFT)){
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .splineTo(
+                                    (new Vector2d(
+                                            30,
+                                            30)),
+                                    Math.PI / 2,
+                                    new TranslationalVelConstraint(5))
+                            .splineTo(new Vector2d(-6, 0), Math.PI)
+                            .build());
+        }
+        else if ((itemFinder.getSelected() == ColorProcessorImpl.Selected.MIDDLE)) {
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .splineTo(
+                                    (new Vector2d(
+                                            30,
+                                            30)),
+                                    Math.PI / 2,
+                                    new TranslationalVelConstraint(5))
+                            .splineTo(new Vector2d(6, 0), Math.PI)
+                            .build());
+        }
+        else if ((itemFinder.getSelected() == ColorProcessorImpl.Selected.RIGHT)) {
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .splineTo(
+                                    (new Vector2d(
+                                            30,
+                                            30)),
+                                    Math.PI / 2,
+                                    new TranslationalVelConstraint(5))
+                            .splineTo(new Vector2d(0, 6), Math.PI)
+                            .build());
+        }
     }
 
     public void loop() {
