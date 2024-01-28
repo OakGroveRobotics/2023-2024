@@ -35,6 +35,7 @@ import java.util.ArrayList;
 public class VisionTesting extends OpMode {
 
     private ColorProcessor itemFinder;
+    private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
     public void init(){
@@ -42,7 +43,7 @@ public class VisionTesting extends OpMode {
         ArrayList<AprilTagDetection> detections = null;
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
-        AprilTagProcessor aprilTag = new AprilTagProcessor.Builder()
+        aprilTag = new AprilTagProcessor.Builder()
         .setLensIntrinsics(775.79f, 775.79f,400.898f, 300.79f)
         .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
         .setTagLibrary(AprilTagGameDatabase.getCenterStageTagLibrary())

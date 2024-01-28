@@ -30,9 +30,9 @@ public class ColorProcessorImpl extends ColorProcessor {
     private boolean needToSetDecimation;
     private final Object decimationSync = new Object();
 
-    public Rect rectLeft = new Rect(110, 42, 40, 40);
-    public Rect rectMiddle = new Rect(160, 42, 40, 40);
-    public Rect rectRight = new Rect(210, 42, 40, 40);
+    public Rect rectLeft = new Rect(10, 42, 200, 400);
+    public Rect rectMiddle = new Rect(220, 42, 200, 400);
+    public Rect rectRight = new Rect(430, 42, 200, 400);
     Selected selection = Selected.NONE;
 
 
