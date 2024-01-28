@@ -7,18 +7,17 @@ import android.graphics.Paint;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.teamcode.piplines.Interfaces.ColorProcessor;
-import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.CvType;
-import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-public class ColorProcessorImpl extends ColorProcessor {
+ public class ColorProcessorImpl extends ColorProcessor {
 
     Mat submat = new Mat();
+    Mat rgb = new Mat();
     Mat hsvMat = new Mat();
     private Mat cameraMatrix;
 
@@ -30,14 +29,15 @@ public class ColorProcessorImpl extends ColorProcessor {
     private boolean needToSetDecimation;
     private final Object decimationSync = new Object();
 
-    public Rect rectLeft = new Rect(10, 42, 200, 400);
-    public Rect rectMiddle = new Rect(220, 42, 200, 400);
-    public Rect rectRight = new Rect(430, 42, 200, 400);
+    public Rect rectLeft = new Rect(10, 300, 180, 200);
+    public Rect rectMiddle = new Rect(220, 300, 400, 200);
+    public Rect rectRight = new Rect(430, 300, 180, 200);
+    public Rect colorDet = new Rect(10, 300, 760, 200);
     Selected selection = Selected.NONE;
+    Side side = Side.NONE;
 
 
-    public ColorProcessorImpl(double fx, double fy, double cx, double cy, int threads)
-    {
+    public ColorProcessorImpl(double fx, double fy, double cx, double cy, int threads) {
         this.fx = fx;
         this.fy = fy;
         this.cx = cx;
@@ -73,9 +73,17 @@ public class ColorProcessorImpl extends ColorProcessor {
             }
         selection = Selected.RIGHT;
         return Selected.RIGHT;
+
+
     }
     protected double getAvgSaturation(Mat input, Rect rect) {
         submat = input.submat(rect);
+        Scalar color = Core.mean(submat);
+        return color.val[1];
+    }
+
+    protected double getRedOrBlue(Mat input, Rect rect){
+        rgb = input.submat(rect);
         Scalar color = Core.mean(submat);
         return color.val[1];
     }
@@ -139,17 +147,19 @@ public class ColorProcessorImpl extends ColorProcessor {
         return selection;
      }
 
-    void constructMatrix()
-    {
-        //     Construct the camera matrix.
-        //
-        //      --         --
-        //     | fx   0   cx |
-        //     | 0    fy  cy |
-        //     | 0    0   1  |
-        //      --         --
-        //
+     public enum Side{
+        RED,
+        BLUE,
+        NONE
+     }
 
+    public Side getSide(){
+        return side;
+    }
+
+
+
+    void constructMatrix() {
         cameraMatrix = new Mat(3,3, CvType.CV_32FC1);
 
         cameraMatrix.put(0,0, fx);

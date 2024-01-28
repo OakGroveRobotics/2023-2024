@@ -6,8 +6,10 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -40,11 +42,31 @@ public class VisionTesting extends OpMode {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
+    Action Left;
+    Action Middle;
+    Action Right;
+
+
     public void init(){
+
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+        Left = drive.actionBuilder(drive.pose)
+                .splineToConstantHeading(new Vector2d(0,0),Math.toRadians(0))
+                .build();
+        Middle = drive.actionBuilder(drive.pose)
+                .splineToConstantHeading(new Vector2d(0,0),Math.toRadians(0))
+                .build();
+        Right = drive.actionBuilder(drive.pose)
+                .splineToConstantHeading(new Vector2d(0,0),Math.toRadians(0))
+                .build();
+
+
         AprilTagDetection TagOfInterest = null;
         ArrayList<AprilTagDetection> detections = null;
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
+
         aprilTag = new AprilTagProcessor.Builder()
         .setLensIntrinsics(775.79f, 775.79f,400.898f, 300.79f)
         .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
@@ -72,37 +94,27 @@ public class VisionTesting extends OpMode {
 }
 
     public void init_loop() {
+        while(itemFinder.getSelected() == ColorProcessorImpl.Selected.NONE){}
+        telemetry.addData("Identified", itemFinder.getSelected());
+
     }
 
     public void start() {
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 
-        while(itemFinder.getSelected() == ColorProcessorImpl.Selected.NONE){}
-
         if((itemFinder.getSelected() == ColorProcessorImpl.Selected.LEFT)){
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .splineTo(new Vector2d(-6, 0), 0)
-                            .build());
+            Actions.runBlocking(Left);
         }
         else if ((itemFinder.getSelected() == ColorProcessorImpl.Selected.MIDDLE)) {
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .splineTo(new Vector2d(6, 0),0)
-                            .build());
+            Actions.runBlocking(Middle);
         }
         else if ((itemFinder.getSelected() == ColorProcessorImpl.Selected.RIGHT)) {
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .splineTo(new Vector2d(0, 6), 0)
-                            .build());
+            Actions.runBlocking(Right);
         }
 
     }
 
     public void loop() {
-
-        telemetry.addData("Identified", itemFinder.getSelected());
     }
 
 }

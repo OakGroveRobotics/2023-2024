@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.DriverControl;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
@@ -46,7 +46,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
 
-@TeleOp(name="Robert", group="Linear Opmode")
+@TeleOp(name="Robert", group="Driver")
 
 public class Robert extends LinearOpMode {
 
@@ -84,16 +84,23 @@ public class Robert extends LinearOpMode {
     public void runOpMode() {
         armExtend1 = hardwareMap.get(DcMotor.class, "armExtend1");
         armExtend2 = hardwareMap.get(DcMotor.class, "armExtend2");
+
         armExtend2.setDirection(DcMotorSimple.Direction.FORWARD);
+
         armRaise = hardwareMap.get(DcMotor.class, "armRaise");
+
         hoist1 = hardwareMap.get(CRServo.class, "hoist1");
         hoist2 = hardwareMap.get(CRServo.class, "hoist2");
         hoist3 = hardwareMap.get(CRServo.class, "hoist3");
         hoist4 = hardwareMap.get(CRServo.class, "hoist4");
+
         planeSwitch = hardwareMap.get(Servo.class, "planeSwitch");
+
         clawFlip1 = hardwareMap.get(Servo.class, "clawFlip1");
         clawFlip2 = hardwareMap.get(Servo.class, "clawFlip2");
+
         clawTilt = hardwareMap.get(Servo.class, "clawTilt");
+
         claw1 = hardwareMap.get(Servo.class, "claw1");
         claw2 = hardwareMap.get(Servo.class, "claw2");
         // Initialize the hardware variables. Note that the strings used here must correspond
@@ -109,14 +116,18 @@ public class Robert extends LinearOpMode {
         DcMotor armExtend1 = hardwareMap.dcMotor.get("armExtend1");
         armExtend1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset the motor encoder
         armExtend1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Turn the motor back on when we are done
+
         DcMotor armRaise = hardwareMap.dcMotor.get("armRaise");
         armRaise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armRaise.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         DcMotor armExtend2 = hardwareMap.dcMotor.get("armExtend2");
         armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         hoist2.setDirection(CRServo.Direction.REVERSE);
         hoist4.setDirection(CRServo.Direction.REVERSE);
+
         planeSwitch.setPosition(.5);
         clawFlip1.setPosition(0.1);
         clawFlip2.setPosition(0.9);
@@ -135,27 +146,24 @@ public class Robert extends LinearOpMode {
             previousGamepad2.copy(currentGamepad2);
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
+
             if(gamepad1.x){
                 clawFlip1.setPosition(.95);
                 clawFlip2.setPosition(.0494);
                 clawTilt.setPosition(.65);
-            }
-            if(gamepad1.a){
+            } else if (gamepad1.a) {
                 clawFlip1.setPosition(.875);
                 clawFlip2.setPosition(.123);
                 clawTilt.setPosition(.7478);
-            }
-            if(gamepad1.b){
+            }else if (gamepad1.b) {
                 clawFlip1.setPosition(.75);
                 clawFlip2.setPosition(.2488);
                 clawTilt.setPosition(.7488);
-            }
-            if(gamepad1.y){
+            } else if (gamepad1.y){
                 clawFlip1.setPosition(.70);
                 clawFlip2.setPosition(.2994);
                 clawTilt.setPosition(.7494);
-            }
-            if(gamepad1.right_stick_button){
+            }else if (gamepad1.right_stick_button){
                 clawFlip1.setPosition(.6494);
                 clawFlip2.setPosition(.3494);
                 clawTilt.setPosition(.6494);
@@ -172,25 +180,27 @@ public class Robert extends LinearOpMode {
             if(currentGamepad1.dpad_left && !previousGamepad1.dpad_left){
                 clawFlip1.setPosition(clawFlip1.getPosition() + 0.05);
                 clawFlip2.setPosition(clawFlip2.getPosition() - 0.05);
-            }
-            if(currentGamepad1.dpad_right && !previousGamepad1.dpad_right){
+            } else if (currentGamepad1.dpad_right && !previousGamepad1.dpad_right) {
                 clawFlip1.setPosition(clawFlip1.getPosition() - 0.05);
                 clawFlip2.setPosition(clawFlip2.getPosition() + 0.05);
             }
             if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up){
                 clawTilt.setPosition(clawTilt.getPosition() + 0.05);
-            }
-            if(currentGamepad1.dpad_down && !previousGamepad1.dpad_down){
+            }else if (currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
                 clawTilt.setPosition(clawTilt.getPosition() - 0.05);
             }
+
             hoist1.setPower(gamepad2.left_stick_y);
             hoist2.setPower(gamepad2.right_stick_y);
             hoist3.setPower(gamepad2.left_stick_y);
             hoist4.setPower(gamepad2.right_stick_y);
+
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
+
             double axial   = gamepad1.left_stick_y;
             double lateral = gamepad1.left_stick_x;
             double yaw     = gamepad1.right_stick_x;
+
             if(runtime.time() > 120 && !alreadyRumble){
                 gamepad1.rumble(2000);
                 gamepad2.rumble(2000);
