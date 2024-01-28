@@ -61,8 +61,7 @@ public class VisionTesting extends OpMode {
         .setNumThreads(3)
         .build();
 
-
-        VisionPortal myVisionPortal = new VisionPortal.Builder()
+        visionPortal = new VisionPortal.Builder()
         .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
         .setCameraResolution(new Size(800, 600))
         .enableLiveView(true)
@@ -98,6 +97,7 @@ public class VisionTesting extends OpMode {
                             .splineTo(new Vector2d(0, 6), 0)
                             .build());
         }
+
     }
 
     public void loop() {
