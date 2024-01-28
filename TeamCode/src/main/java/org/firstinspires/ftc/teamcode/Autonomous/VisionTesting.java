@@ -101,6 +101,7 @@ public class VisionTesting extends OpMode {
     }
 
     public void loop() {
+
         telemetry.addData("Identified", itemFinder.getSelected());
     }
 
