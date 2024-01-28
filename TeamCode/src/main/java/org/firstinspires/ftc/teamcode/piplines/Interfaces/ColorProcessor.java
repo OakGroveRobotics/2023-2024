@@ -55,5 +55,7 @@ public abstract class ColorProcessor implements VisionProcessor {
      * @param decimation detector decimation
      */
     public abstract void setDecimation(float decimation);
+
+    public abstract ColorProcessorImpl.Selected getSelected();
 }
 
