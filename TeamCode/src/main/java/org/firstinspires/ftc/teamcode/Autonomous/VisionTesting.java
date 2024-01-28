@@ -83,19 +83,19 @@ public class VisionTesting extends OpMode {
         if((itemFinder.getSelected() == ColorProcessorImpl.Selected.LEFT)){
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
-                            .splineTo(new Vector2d(-6, 0), Math.PI)
+                            .splineTo(new Vector2d(-6, 0), 0)
                             .build());
         }
         else if ((itemFinder.getSelected() == ColorProcessorImpl.Selected.MIDDLE)) {
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
-                            .splineTo(new Vector2d(6, 0), Math.PI)
+                            .splineTo(new Vector2d(6, 0),0)
                             .build());
         }
         else if ((itemFinder.getSelected() == ColorProcessorImpl.Selected.RIGHT)) {
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
-                            .splineTo(new Vector2d(0, 6), Math.PI)
+                            .splineTo(new Vector2d(0, 6), 0)
                             .build());
         }
     }
