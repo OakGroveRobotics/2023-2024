@@ -53,7 +53,7 @@ public class VisionTesting extends OpMode {
         .setDrawTagOutline(true)
         .build();
 
-        ColorProcessor itemFinder = new ColorProcessor.Builder()
+        itemFinder = new ColorProcessor.Builder()
         .setLensIntrinsics(775.79f, 775.79f,400.898f, 300.79f)
         .setNumThreads(3)
         .build();
