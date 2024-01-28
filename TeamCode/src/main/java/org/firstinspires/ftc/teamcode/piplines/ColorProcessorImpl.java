@@ -65,10 +65,13 @@ public class ColorProcessorImpl extends ColorProcessor {
         double satRectRight = getAvgSaturation(hsvMat, rectRight);
 
         if ((satRectLeft > satRectMiddle) && (satRectLeft > satRectRight)) {
+            selection = Selected.LEFT;
              return Selected.LEFT;
             } else if ((satRectMiddle > satRectLeft) && (satRectMiddle > satRectRight)) {
+            selection = Selected.MIDDLE;
             return Selected.MIDDLE;
             }
+        selection = Selected.RIGHT;
         return Selected.RIGHT;
     }
     protected double getAvgSaturation(Mat input, Rect rect) {
