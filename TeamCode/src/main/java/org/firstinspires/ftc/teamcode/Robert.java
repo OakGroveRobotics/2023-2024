@@ -61,6 +61,8 @@ public class Robert extends LinearOpMode {
     private DcMotor armRaise = null;
     private CRServo hoist1 = null;
     private CRServo hoist2 = null;
+    private CRServo hoist3 = null;
+    private CRServo hoist4 = null;
     private Servo planeSwitch = null;
     private Servo clawFlip1 = null;
     private Servo clawFlip2 = null;
@@ -86,6 +88,8 @@ public class Robert extends LinearOpMode {
         armRaise = hardwareMap.get(DcMotor.class, "armRaise");
         hoist1 = hardwareMap.get(CRServo.class, "hoist1");
         hoist2 = hardwareMap.get(CRServo.class, "hoist2");
+        hoist3 = hardwareMap.get(CRServo.class, "hoist3");
+        hoist4 = hardwareMap.get(CRServo.class, "hoist4");
         planeSwitch = hardwareMap.get(Servo.class, "planeSwitch");
         clawFlip1 = hardwareMap.get(Servo.class, "clawFlip1");
         clawFlip2 = hardwareMap.get(Servo.class, "clawFlip2");
@@ -112,6 +116,7 @@ public class Robert extends LinearOpMode {
         armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hoist2.setDirection(CRServo.Direction.REVERSE);
+        hoist4.setDirection(CRServo.Direction.REVERSE);
         planeSwitch.setPosition(.5);
         clawFlip1.setPosition(0.1);
         clawFlip2.setPosition(0.9);
@@ -180,6 +185,8 @@ public class Robert extends LinearOpMode {
             }
             hoist1.setPower(gamepad2.left_stick_y);
             hoist2.setPower(gamepad2.right_stick_y);
+            hoist3.setPower(gamepad2.left_stick_y);
+            hoist4.setPower(gamepad2.right_stick_y);
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = gamepad1.left_stick_y;
             double lateral = gamepad1.left_stick_x;
