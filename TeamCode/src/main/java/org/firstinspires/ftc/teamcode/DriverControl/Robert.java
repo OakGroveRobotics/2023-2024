@@ -197,9 +197,9 @@ public class Robert extends LinearOpMode {
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
 
-            double axial   = gamepad1.left_stick_y;
-            double lateral = gamepad1.left_stick_x;
-            double yaw     = gamepad1.right_stick_x;
+            double axial   = -gamepad1.left_stick_y;
+            double lateral = -gamepad1.left_stick_x;
+            double yaw     = -gamepad1.right_stick_x;
 
             if(runtime.time() > 120 && !alreadyRumble){
                 gamepad1.rumble(2000);
