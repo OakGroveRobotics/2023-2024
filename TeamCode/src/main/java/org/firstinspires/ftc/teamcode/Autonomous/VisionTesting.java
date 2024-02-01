@@ -19,10 +19,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Subsystems.Claw;
 import org.firstinspires.ftc.teamcode.Subsystems.MecanumDrive;
 import org.firstinspires.ftc.teamcode.piplines.ColorProcessorImpl;
 import org.firstinspires.ftc.teamcode.piplines.Interfaces.ColorProcessor;
@@ -41,24 +43,41 @@ public class VisionTesting extends OpMode {
     private ColorProcessor itemFinder;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
+    private Servo clawFlip1 = null;
+    private Servo clawFlip2 = null;
+    private Servo clawTilt = null;
+    private Servo claw1 = null;
+    private Servo claw2 = null;
+
+    private Claw claw = null;
 
     Action Left;
     Action Middle;
     Action Right;
+    Action toBoard;
 
 
     public void init(){
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 
+        claw = new Claw(hardwareMap);
+        claw.clawLeftClose();
+        claw.clawRightClose();
+
         Left = drive.actionBuilder(drive.pose)
-                .splineToConstantHeading(new Vector2d(0,0),Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10,10),Math.toRadians(0))
                 .build();
         Middle = drive.actionBuilder(drive.pose)
-                .splineToConstantHeading(new Vector2d(0,0),Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(19,0),Math.toRadians(0))
                 .build();
         Right = drive.actionBuilder(drive.pose)
-                .splineToConstantHeading(new Vector2d(0,0),Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(10,-10),Math.toRadians(0))
+                .build();
+
+        toBoard = drive.actionBuilder(drive.pose)
+                .turn(Math.toRadians(90))
+                .strafeTo(new Vector2d(10,-40))
                 .build();
 
 
@@ -77,6 +96,7 @@ public class VisionTesting extends OpMode {
         .setDrawTagID(true)
         .setDrawTagOutline(true)
         .build();
+
 
         itemFinder = new ColorProcessor.Builder()
         .setLensIntrinsics(775.79f, 775.79f,400.898f, 300.79f)
@@ -100,7 +120,8 @@ public class VisionTesting extends OpMode {
     }
 
     public void start() {
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+
+        claw.goToPos2();
 
         if((itemFinder.getSelected() == ColorProcessorImpl.Selected.LEFT)){
             Actions.runBlocking(Left);
@@ -112,9 +133,25 @@ public class VisionTesting extends OpMode {
             Actions.runBlocking(Right);
         }
 
+        claw.clawLeftOpen();
+
+        claw.goToPos1();
+
+        Actions.runBlocking(toBoard);
+
+        ArrayList<AprilTagDetection> detections = aprilTag.getFreshDetections();
+        for (AprilTagDetection detection : detections) {
+            if (detection.metadata != null) {
+                break;
+            }
+        }
+
+
+
     }
 
     public void loop() {
+        telemetry.addData("Hue", itemFinder.getHue());
     }
 
 }

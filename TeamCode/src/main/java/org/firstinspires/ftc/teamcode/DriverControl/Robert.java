@@ -125,8 +125,8 @@ public class Robert extends LinearOpMode {
         armExtend2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armExtend2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        hoist2.setDirection(CRServo.Direction.REVERSE);
-        hoist4.setDirection(CRServo.Direction.REVERSE);
+        hoist1.setDirection(CRServo.Direction.REVERSE);
+        hoist3.setDirection(CRServo.Direction.REVERSE);
 
         planeSwitch.setPosition(.5);
         clawFlip1.setPosition(0.1);
@@ -190,16 +190,16 @@ public class Robert extends LinearOpMode {
                 clawTilt.setPosition(clawTilt.getPosition() - 0.05);
             }
 
-            hoist1.setPower(gamepad2.left_stick_y);
-            hoist2.setPower(gamepad2.right_stick_y);
-            hoist3.setPower(gamepad2.left_stick_y);
-            hoist4.setPower(gamepad2.right_stick_y);
+            hoist1.setPower(gamepad2.right_stick_y);
+            hoist2.setPower(gamepad2.left_stick_y);
+            hoist3.setPower(gamepad2.right_stick_y);
+            hoist4.setPower(gamepad2.left_stick_y);
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
 
-            double axial   = gamepad1.left_stick_y;
-            double lateral = gamepad1.left_stick_x;
-            double yaw     = gamepad1.right_stick_x;
+            double axial   = -gamepad1.left_stick_y;
+            double lateral = -gamepad1.left_stick_x;
+            double yaw     = -gamepad1.right_stick_x;
 
             if(runtime.time() > 120 && !alreadyRumble){
                 gamepad1.rumble(2000);

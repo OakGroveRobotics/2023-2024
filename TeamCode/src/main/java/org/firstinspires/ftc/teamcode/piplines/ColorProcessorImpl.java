@@ -30,11 +30,12 @@ import org.opencv.imgproc.Imgproc;
     private final Object decimationSync = new Object();
 
     public Rect rectLeft = new Rect(10, 300, 180, 200);
-    public Rect rectMiddle = new Rect(220, 300, 400, 200);
-    public Rect rectRight = new Rect(430, 300, 180, 200);
+    public Rect rectMiddle = new Rect(200, 300, 400, 200);
+    public Rect rectRight = new Rect(610, 300, 180, 200);
     public Rect colorDet = new Rect(10, 300, 760, 200);
     Selected selection = Selected.NONE;
     Side side = Side.NONE;
+    public double hue = 0;
 
 
     public ColorProcessorImpl(double fx, double fy, double cx, double cy, int threads) {
@@ -157,9 +158,14 @@ import org.opencv.imgproc.Imgproc;
         return side;
     }
 
+    public double getHue(){
+         return hue;
+     }
 
 
-    void constructMatrix() {
+
+
+     void constructMatrix() {
         cameraMatrix = new Mat(3,3, CvType.CV_32FC1);
 
         cameraMatrix.put(0,0, fx);

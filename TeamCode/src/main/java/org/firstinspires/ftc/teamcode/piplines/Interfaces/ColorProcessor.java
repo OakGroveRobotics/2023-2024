@@ -58,5 +58,7 @@ public abstract class ColorProcessor implements VisionProcessor {
 
     public abstract ColorProcessorImpl.Selected getSelected();
     public abstract ColorProcessorImpl.Side getSide();
+    public abstract double getHue();
+
 }
 
