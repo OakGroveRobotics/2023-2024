@@ -1,25 +1,19 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -34,6 +28,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Config
 @Autonomous
@@ -43,23 +38,27 @@ public class VisionTesting extends OpMode {
     private ColorProcessor itemFinder;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
-    private Servo clawFlip1 = null;
-    private Servo clawFlip2 = null;
-    private Servo clawTilt = null;
-    private Servo claw1 = null;
-    private Servo claw2 = null;
+
+    private ColorProcessorImpl.Side side;
 
     private Claw claw = null;
+    private MecanumDrive drive;
 
     Action Left;
     Action Middle;
     Action Right;
     Action toBoard;
 
+    int TARGET_TAG_ID;
+    AprilTagDetection targetTag = null;
+    ArrayList<AprilTagDetection> detections = null;
+
+    double BACKBOARD_OFFSET = 6.0;
+
 
     public void init(){
 
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 
         claw = new Claw(hardwareMap);
         claw.clawLeftClose();
@@ -79,10 +78,6 @@ public class VisionTesting extends OpMode {
                 .turn(Math.toRadians(90))
                 .strafeTo(new Vector2d(10,-40))
                 .build();
-
-
-        AprilTagDetection TagOfInterest = null;
-        ArrayList<AprilTagDetection> detections = null;
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -109,8 +104,6 @@ public class VisionTesting extends OpMode {
         .enableLiveView(true)
         .addProcessors(aprilTag, itemFinder)
         .build();
-
-        TelemetryPacket packet2 = new TelemetryPacket();
 }
 
     public void init_loop() {
@@ -121,16 +114,33 @@ public class VisionTesting extends OpMode {
 
     public void start() {
 
-        claw.goToPos2();
+        side = itemFinder.getSide();
+
+        claw.goToFloor();
 
         if((itemFinder.getSelected() == ColorProcessorImpl.Selected.LEFT)){
             Actions.runBlocking(Left);
+            if(side == ColorProcessorImpl.Side.BLUE){
+                TARGET_TAG_ID = 1;
+            } else{
+                TARGET_TAG_ID = 4;
+            }
         }
         else if ((itemFinder.getSelected() == ColorProcessorImpl.Selected.MIDDLE)) {
             Actions.runBlocking(Middle);
+            if(side == ColorProcessorImpl.Side.BLUE){
+                TARGET_TAG_ID = 2;
+            } else{
+                TARGET_TAG_ID = 5;
+            }
         }
         else if ((itemFinder.getSelected() == ColorProcessorImpl.Selected.RIGHT)) {
             Actions.runBlocking(Right);
+            if(side == ColorProcessorImpl.Side.BLUE){
+                TARGET_TAG_ID = 3;
+            } else{
+                TARGET_TAG_ID = 6;
+            }
         }
 
         claw.clawLeftOpen();
@@ -139,19 +149,38 @@ public class VisionTesting extends OpMode {
 
         Actions.runBlocking(toBoard);
 
-        ArrayList<AprilTagDetection> detections = aprilTag.getFreshDetections();
-        for (AprilTagDetection detection : detections) {
-            if (detection.metadata != null) {
-                break;
+        while(Objects.isNull(targetTag)){
+            detections = aprilTag.getFreshDetections();
+            for (AprilTagDetection detection : detections) {
+                if (Objects.nonNull(detection.metadata)) {
+                    if(detection.id == TARGET_TAG_ID){
+                        targetTag = detection;
+                        break;
+                    }
+                }
             }
         }
 
-
+        while (targetTag.ftcPose.y > 6) {
+            drive.setDrivePowers(
+                    new PoseVelocity2d(
+                            new Vector2d(
+                                    Range.clip(targetTag.ftcPose.range, -0.5, 0.5),
+                                    Range.clip(-targetTag.ftcPose.yaw, -0.5, 0.5))
+                            , 0
+                    )
+            );
+        }
 
     }
 
     public void loop() {
-        telemetry.addData("Hue", itemFinder.getHue());
+
+
+        telemetry.addData("Red", itemFinder.getRGB().val[0]);
+        telemetry.addData("Green", itemFinder.getRGB().val[1]);
+        telemetry.addData("Blue", itemFinder.getRGB().val[2]);
+        telemetry.addData("?", itemFinder.getRGB().val[3]);
     }
 
 }

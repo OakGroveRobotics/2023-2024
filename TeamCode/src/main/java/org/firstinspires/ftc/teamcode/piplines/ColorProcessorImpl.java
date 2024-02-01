@@ -35,7 +35,7 @@ import org.opencv.imgproc.Imgproc;
     public Rect colorDet = new Rect(10, 300, 760, 200);
     Selected selection = Selected.NONE;
     Side side = Side.NONE;
-    public double hue = 0;
+   public Scalar RGB = null;
 
 
     public ColorProcessorImpl(double fx, double fy, double cx, double cy, int threads) {
@@ -43,6 +43,7 @@ import org.opencv.imgproc.Imgproc;
         this.fy = fy;
         this.cx = cx;
         this.cy = cy;
+        this.RGB = new Scalar(0,0,0,0);
 
     }
 
@@ -61,17 +62,28 @@ import org.opencv.imgproc.Imgproc;
 
         Imgproc.cvtColor(frame, hsvMat, Imgproc.COLOR_RGB2HSV);
 
+
+
         double satRectLeft = getAvgSaturation(hsvMat, rectLeft);
         double satRectMiddle = getAvgSaturation(hsvMat, rectMiddle);
         double satRectRight = getAvgSaturation(hsvMat, rectRight);
 
         if ((satRectLeft > satRectMiddle) && (satRectLeft > satRectRight)) {
+            rgb = frame.submat(rectLeft);
+            RGB =  Core.mean(rgb);
+//            getDominantChannel(frame, rectLeft);
             selection = Selected.LEFT;
              return Selected.LEFT;
             } else if ((satRectMiddle > satRectLeft) && (satRectMiddle > satRectRight)) {
+            rgb = frame.submat(rectMiddle);
+            RGB =  Core.mean(rgb);
+//            getDominantChannel(frame, rectMiddle);
             selection = Selected.MIDDLE;
             return Selected.MIDDLE;
             }
+        rgb = frame.submat(rectRight);
+        RGB =  Core.mean(rgb);
+//        getDominantChannel(frame, rectRight);
         selection = Selected.RIGHT;
         return Selected.RIGHT;
 
@@ -83,9 +95,10 @@ import org.opencv.imgproc.Imgproc;
         return color.val[1];
     }
 
-    protected double getRedOrBlue(Mat input, Rect rect){
+    protected double getDominantChannel(Mat input, Rect rect){
         rgb = input.submat(rect);
         Scalar color = Core.mean(submat);
+
         return color.val[1];
     }
 
@@ -158,8 +171,8 @@ import org.opencv.imgproc.Imgproc;
         return side;
     }
 
-    public double getHue(){
-         return hue;
+    public Scalar getRGB(){
+         return RGB;
      }
 
 

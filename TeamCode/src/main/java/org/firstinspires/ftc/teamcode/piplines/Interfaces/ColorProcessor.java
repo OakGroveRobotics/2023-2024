@@ -4,13 +4,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.piplines.ColorProcessorImpl;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.core.Scalar;
 
 public abstract class ColorProcessor implements VisionProcessor {
     public static final int THREADS_DEFAULT = 3;
-
-    public static org.firstinspires.ftc.vision.apriltag.AprilTagProcessor easyCreateWithDefaults() {
-        return new org.firstinspires.ftc.vision.apriltag.AprilTagProcessor.Builder().build();
-    }
 
     public static class Builder {
         private double fx, fy, cx, cy;
@@ -58,7 +55,7 @@ public abstract class ColorProcessor implements VisionProcessor {
 
     public abstract ColorProcessorImpl.Selected getSelected();
     public abstract ColorProcessorImpl.Side getSide();
-    public abstract double getHue();
+    public abstract Scalar getRGB();
 
 }
 

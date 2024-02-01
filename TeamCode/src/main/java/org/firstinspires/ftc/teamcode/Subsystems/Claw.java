@@ -105,7 +105,7 @@ public class Claw {
         clawFlip.goTopos1();
         clawTilt.setPosition(.65);
     }
-    public void goToPos2(){
+    public void goToFloor(){
         clawFlip.goTopos2();
         clawTilt.setPosition(.7);
     }
